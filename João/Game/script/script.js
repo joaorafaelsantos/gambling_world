@@ -47,5 +47,20 @@ $(function () {
         $('h2').css("padding-top", "125px")
     }
 
+    // Load how to play section after click
+    $('#howToPlay').click(function () {
+        $('#sectionMenu').load('pages/howToPlay.html')
+    });
+
+    // Load credits section after click
+    $('#credits').click(function () {
+        $('#sectionMenu').load('pages/credits.html')
+    });
+
+    $('#btnBackMenu').click(function () {
+            location.reload();
+        });
+
+
 
 });

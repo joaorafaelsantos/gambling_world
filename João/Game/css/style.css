@@ -34,14 +34,29 @@ h1 {
     font-size: 250%;
 }
 
+button:focus {
+    outline: 0;
+}
+
+.btn {
+    text-decoration: none !important
+}
+
+.btn-link {
+    color: rgb(255, 255, 255);
+    font-family: 'OpenSans-Light';
+}
+
 .btn-link:hover {
-    text-decoration: none;
+    color: rgb(255, 255, 255);
+    opacity: 0.8;
 }
 
 #play:hover,
-#instructions:hover,
-#contacts:hover {
+#howToPlay:hover,
+#credits:hover {
     opacity: 0.8;
+    font-size: 200%;
 }
 
 h2 {
@@ -49,4 +64,13 @@ h2 {
     font-family: 'OpenSans-Light';
     font-size: 100%;
     padding-top: 125px;
+}
+
+#btnBackMenu {
+    padding-top: 30px;
+    font-size: 200%;
+}
+
+#btnBackMenu:focus {
+    color: rgb(255, 255, 255);
 }
