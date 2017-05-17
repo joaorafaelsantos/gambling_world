@@ -1,0 +1,52 @@
+@font-face {
+    font-family: OpenSans-Light;
+    src: url('../fonts/OpenSans-Light.ttf');
+}
+
+html,
+body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    height: 100%;
+}
+
+body {
+    background: url('../images/michal-parzuchowski-43274.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#logo {
+    padding-top: 20px;
+}
+
+#sectionMenu {
+    padding-top: 100px;
+}
+
+i {
+    color: rgb(255, 255, 255);
+}
+
+h1 {
+    color: rgb(255, 255, 255);
+    font-family: 'OpenSans-Light';
+    font-size: 250%;
+}
+
+.btn-link:hover {
+    text-decoration: none;
+}
+
+#play:hover,
+#instructions:hover,
+#contacts:hover {
+    opacity: 0.8;
+}
+
+h2 {
+    color: rgb(255, 255, 255);
+    font-family: 'OpenSans-Light';
+    font-size: 100%;
+    padding-top: 125px;
+}
