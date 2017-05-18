@@ -52,14 +52,19 @@ $(function () {
         $('#sectionMenu').load('pages/howToPlay.html')
     });
 
+    // Load game modes section after click
+    $('#play').click(function () {
+        $('#sectionMenu').load('pages/gameModes.html')
+    });
+
     // Load credits section after click
     $('#credits').click(function () {
         $('#sectionMenu').load('pages/credits.html')
     });
 
     $('#btnBackMenu').click(function () {
-            location.reload();
-        });
+        location.reload();
+    });
 
 
 

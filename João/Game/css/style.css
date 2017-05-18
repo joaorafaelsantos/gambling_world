@@ -11,7 +11,7 @@ body {
 }
 
 body {
-    background: url('../images/michal-parzuchowski-43274.jpg');
+    background: url('../images/theme/michal-parzuchowski-43274.jpg');
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -67,10 +67,19 @@ h2 {
 }
 
 #btnBackMenu {
-    padding-top: 30px;
+    padding-top: 50px;
     font-size: 200%;
 }
 
 #btnBackMenu:focus {
     color: rgb(255, 255, 255);
+}
+
+/* Game Modes */
+
+#vira img:hover,
+#hotSpin img:hover,
+#bancaFrancesa img:hover {
+    opacity: 0.8;
+    transform: scale(1.5,1.5);
 }
