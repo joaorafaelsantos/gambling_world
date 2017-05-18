@@ -1,0 +1,257 @@
+<html>
+
+<head>
+    <script src="../libs/three.min.js"></script>
+    <script src="../libs/OrbitControls.js"></script>
+
+    <script type="text/javascript">
+        window.onload = function init() {
+
+            var rotate;
+            var cylinderA = new THREE.Object3D();
+            var cylinderB = new THREE.Object3D();
+            var cylinderC = new THREE.Object3D();
+
+            var rotationCA;
+            var rotationCB;
+            var rotationCC;
+
+            var currentCA = 0;
+            var currentCB = 0;
+            var currentCC = 0;
+
+            var runningCA;
+            var runningCB;
+            var runningCC;
+
+            //scene
+            var scene = new THREE.Scene();
+            var axes = new THREE.AxisHelper(200);
+            // cylinderB.add(axes);
+            scene.add(axes)
+
+            //camera
+            var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 10, 200);
+            // position and point the camera to the center of the scene
+            camera.position.set(0, 40, 100);
+            camera.lookAt(scene.position);
+
+            //renderer
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            //controls
+            // var controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls = new THREE.OrbitControls(camera);
+            controls.addEventListener('change', function () {
+                renderer.render(scene, camera);
+            });
+
+            //show canvas
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            //material for all geometries
+            var material = new THREE.MeshNormalMaterial();
+
+
+
+            //render scene
+            var render = function () {
+                requestAnimationFrame(render);
+
+
+
+                if (runningCA == true) {
+
+                    console.log(currentCA, rotationCA)
+
+                    cylinderA.rotation.x += 0.1;
+                    currentCA += 0.1;
+                    if (currentCA >= rotationCA) {
+                        runningCA = false;
+                        cylinderA.rotation.x = rotationCA;
+                    }
+                }
+
+                if (runningCB == true) {
+                    cylinderB.rotation.x += 0.1;
+                    currentCB += 0.1;
+                    if (currentCB >= rotationCB) {
+                        runningCB = false;
+                        cylinderB.rotation.x = rotationCB;
+                    }
+                }
+
+                if (runningCC == true) {
+                    cylinderC.rotation.x += 0.1;
+                    currentCC += 0.1;
+                    if (currentCC >= rotationCC) {
+                        runningCC = false;
+                        cylinderC.rotation.x = rotationCC;
+                    }
+                }
+
+
+
+                renderer.render(scene, camera);
+            };
+
+            for (var i = 0; i < 3; i++) {
+                createCylinder(10 * i, i);
+            }
+
+            render();
+
+
+
+            function createCylinder(posX, index) {
+
+                var geometry = new THREE.BoxGeometry(10, 0.2, 10);
+                var material = new THREE.MeshBasicMaterial({
+                    color: "white"
+                });
+
+                var matArray = [];
+                var texture = new THREE.TextureLoader().load('icons/7.jpg');
+                matArray.push(new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.FrontSide
+                }));
+                var texture = new THREE.TextureLoader().load('icons/banana.jpg');
+                matArray.push(new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.FrontSide
+                }));
+                var texture = new THREE.TextureLoader().load('icons/bar.jpg');
+                matArray.push(new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.FrontSide
+                }));
+                var texture = new THREE.TextureLoader().load('icons/cherry.jpg');
+                matArray.push(new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.FrontSide
+                }));
+                var texture = new THREE.TextureLoader().load('icons/lemon.jpg');
+                matArray.push(new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.FrontSide
+                }));
+                var texture = new THREE.TextureLoader().load('icons/bigwin.jpg');
+                matArray.push(new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.FrontSide
+                }));
+                var texture = new THREE.TextureLoader().load('icons/watermelon.jpg');
+                matArray.push(new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.FrontSide
+                }));
+
+                var ang = 0;
+
+                for (var i = 0; i < 7; i++) {
+                    var face = new THREE.Mesh(geometry, matArray[i]);
+                    face.rotation.x = ang;
+                    if (i == 0) {
+                        face.position.z = 0.02;
+                        face.position.y = -10.3;
+                    } else if (i == 1) {
+                        face.position.z = -8.01;
+                        face.position.y = -6.4;
+                    } else if (i == 2) {
+                        face.position.z = -10;
+                        face.position.y = 2.3;
+                    } else if (i == 3) {
+                        face.position.z = -4.41;
+                        face.position.y = 9.3;
+                    } else if (i == 4) {
+                        face.position.z = 4.52;
+                        face.position.y = 9.3;
+                    } else if (i == 5) {
+                        face.position.z = 10.11;
+                        face.position.y = 2.3;
+                    } else if (i == 6) {
+                        face.position.z = 8.12;
+                        face.position.y = -6.4;
+                    }
+
+                    ang += (Math.PI * 2) / 7;
+
+                    if (index == 0) {
+                        cylinderA.add(face);
+                    } else if (index == 1) {
+                        cylinderB.add(face);
+                    } else if (index == 2) {
+                        cylinderC.add(face);
+                    }
+
+
+
+                }
+
+                if (index == 0) {
+                    cylinderA.position.x = posX;
+                    cylinderA.rotation.x = 0.2;
+                    scene.add(cylinderA);
+                } else if (index == 1) {
+                    cylinderB.position.x = posX;
+                    cylinderB.rotation.x = 0.2;
+                    scene.add(cylinderB);
+                } else if (index == 2) {
+                    cylinderC.position.x = posX;
+                    cylinderC.rotation.x = 0.2;
+                    scene.add(cylinderC);
+                }
+
+
+
+
+            }
+
+            function startSlotMachine() {
+
+                // var nRotations = [(1,14), ]
+
+                rotationCA = (Math.PI * 2) * 3 + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) + 0.1;
+                rotationCB = rotationCA + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) - 0.1;
+                rotationCC = rotationCB + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) - 0.1;
+
+                runningCA = true;
+                runningCB = true;
+                runningCC = true;
+
+                currentCA = 0;
+                currentCB = 0;
+                currentCC = 0;
+
+            }
+
+            window.addEventListener("keydown", function (evt) {
+
+
+                if (evt.keyCode == 32) {
+                    startSlotMachine();
+                }
+            });
+
+            window.addEventListener("keyup", function (evt) {
+                if (evt.keyCode == 32) {
+                    rotate = false;
+                }
+            });
+
+
+
+
+
+        }
+    </script>
+
+</head>
+
+<body style="background: black">
+    <div id="canvas-container" style="position: absolute; left:0px; top:0px"></div>
+</body>
+
+</html>
