@@ -63,7 +63,6 @@
 
                 if (runningCA == true) {
 
-                    console.log(currentCA, rotationCA)
 
                     cylinderA.rotation.x += 0.1;
                     currentCA += 0.1;
@@ -76,7 +75,8 @@
                 if (runningCB == true) {
                     cylinderB.rotation.x -= 0.1;
                     currentCB -= 0.1;
-                    if (currentCB <= rotationCB) {
+			console.log(currentCB, rotationCB);
+                    if (currentCB <= -rotationCB) {
                         runningCB = false;
                         cylinderB.rotation.x = -rotationCB;
                     }
@@ -214,8 +214,8 @@
                 // var nRotations = [(1,14), ]
 
                 rotationCA = (Math.PI * 2) * 3 + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) + 0.1;
-                rotationCB = rotationCA + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) - 0.1;
-                rotationCC = rotationCB + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) - 0.1;
+                rotationCB = rotationCA + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) + 0.4 ;
+                rotationCC = rotationCB + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) + 0.3;
 
                 runningCA = true;
                 runningCB = true;
