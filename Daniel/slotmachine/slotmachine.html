@@ -57,7 +57,7 @@
 
             //render scene
             var render = function () {
-                requestAnimationFrame(render);
+
 
 
 
@@ -75,7 +75,7 @@
                 if (runningCB == true) {
                     cylinderB.rotation.x -= 0.1;
                     currentCB -= 0.1;
-			console.log(currentCB, rotationCB);
+                    console.log(currentCB, rotationCB);
                     if (currentCB <= -rotationCB) {
                         runningCB = false;
                         cylinderB.rotation.x = -rotationCB;
@@ -94,6 +94,7 @@
 
 
                 renderer.render(scene, camera);
+                requestAnimationFrame(render);
             };
 
             for (var i = 0; i < 3; i++) {
@@ -213,8 +214,8 @@
 
                 // var nRotations = [(1,14), ]
 
-                rotationCA = (Math.PI * 2) * 3 + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) + 0.1;
-                rotationCB = rotationCA + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) + 0.4 ;
+                rotationCA = (Math.PI * 2) * 1.5 + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) + 0.1;
+                rotationCB = rotationCA + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) + 0.4;
                 rotationCC = rotationCB + (Math.PI * 2 / 7 * Math.round(Math.random() * (7)) + 1) + 0.3;
 
                 runningCA = true;
