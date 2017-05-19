@@ -74,11 +74,11 @@
                 }
 
                 if (runningCB == true) {
-                    cylinderB.rotation.x += 0.1;
-                    currentCB += 0.1;
-                    if (currentCB >= rotationCB) {
+                    cylinderB.rotation.x -= 0.1;
+                    currentCB -= 0.1;
+                    if (currentCB <= rotationCB) {
                         runningCB = false;
-                        cylinderB.rotation.x = rotationCB;
+                        cylinderB.rotation.x = -rotationCB;
                     }
                 }
 
