@@ -49,17 +49,17 @@ $(function () {
 
     // Load how to play section after click
     $('#howToPlay').click(function () {
-        $('#sectionMenu').load('pages/howToPlay.html')
+        $('#sectionMenu').load('common/pages/how-to-play.html')
     });
 
     // Load game modes section after click
     $('#play').click(function () {
-        $('#sectionMenu').load('pages/gameModes.html')
+        $('#sectionMenu').load('common/pages/game-modes.html')
     });
 
     // Load credits section after click
     $('#credits').click(function () {
-        $('#sectionMenu').load('pages/credits.html')
+        $('#sectionMenu').load('common/pages/credits.html')
     });
 
     $('#btnBackMenu').click(function () {

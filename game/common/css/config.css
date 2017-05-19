@@ -75,11 +75,22 @@ h2 {
     color: rgb(255, 255, 255);
 }
 
+#btnBackMenu:hover {
+    font-size: 275%;
+}
+
+
 /* Game Modes */
+
+#vira img,
+#hotSpin img,
+#bancaFrancesa img {
+    opacity: 0.8;
+}
 
 #vira img:hover,
 #hotSpin img:hover,
 #bancaFrancesa img:hover {
-    opacity: 0.8;
-    transform: scale(1.5,1.5);
+    opacity: 1;
+    transform: scale(1.5, 1.5);
 }
