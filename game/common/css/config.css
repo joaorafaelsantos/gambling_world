@@ -82,15 +82,26 @@ h2 {
 
 /* Game Modes */
 
-#vira img,
-#hotSpin img,
-#bancaFrancesa img {
+#vira,
+#hotSpin,
+#bancaFrancesa{
     opacity: 0.8;
 }
 
-#vira img:hover,
-#hotSpin img:hover,
-#bancaFrancesa img:hover {
+#vira:hover,
+#hotSpin:hover,
+#bancaFrancesa:hover {
     opacity: 1;
     transform: scale(1.5, 1.5);
+}
+
+label {
+    color: rgb(255, 255, 255);
+    font-family: 'OpenSans-Light';
+    font-size: 125%;
+}
+
+input, select, option {
+    font-family: 'OpenSans-Light';
+    font-size: 125%;
 }
