@@ -1,7 +1,6 @@
 function createCylinder(posX, index) {
 
     var geometry = new THREE.BoxGeometry(10, 0.2, 10);
-    geometry.computeVertexNormals();
     var material = new THREE.MeshBasicMaterial({
         color: "white"
     });
@@ -47,37 +46,28 @@ function createCylinder(posX, index) {
 
     for (var i = 0; i < 7; i++) {
         var face = new THREE.Mesh(geometry, matArray[i]);
-        face.geometry.verticesNeedUpdate = true;
-        face.geometry.matrixWorldNeedsUpdate = true;
         face.rotation.x = ang;
         if (i == 0) {
             face.position.z = 0.02;
             face.position.y = -10.3;
-            face.symbol = "7";
         } else if (i == 1) {
             face.position.z = -8.01;
             face.position.y = -6.4;
-            face.symbol = "banana";
         } else if (i == 2) {
             face.position.z = -10;
             face.position.y = 2.3;
-            face.symbol = "bar";
         } else if (i == 3) {
             face.position.z = -4.41;
             face.position.y = 9.3;
-            face.symbol = "cherry";
         } else if (i == 4) {
             face.position.z = 4.52;
             face.position.y = 9.3;
-            face.symbol = "lemon";
         } else if (i == 5) {
             face.position.z = 10.11;
             face.position.y = 2.3;
-            face.symbol = "bigwin";
         } else if (i == 6) {
             face.position.z = 8.12;
             face.position.y = -6.4;
-            face.symbol = "watermelon";
         }
 
         ang += (Math.PI * 2) / 7;
@@ -138,11 +128,9 @@ function startSlotMachine() {
     } else if (symbolB >= 7) {
         symbolB -= 7;
     }
-    if(symbolC >= 21)
-    {
+    if (symbolC >= 21) {
         symbolC -= 21;
-    }
-    else if (symbolC >= 14) {
+    } else if (symbolC >= 14) {
         symbolC -= 14;
     } else if (symbolC >= 7) {
         symbolC -= 7;
@@ -156,6 +144,9 @@ function startSlotMachine() {
     currentCA = 0;
     currentCB = 0;
     currentCC = 0;
+
+    money -= bet;
+    console.log(money)
 
 }
 
@@ -198,22 +189,140 @@ function createModel() {
 
 }
 
-function copyVector() {
-    var copyVectors = []
-    var faceDown = []
-    for (var i = 0; i < 8; i++) {
-        var vector = new THREE.Vector3();
-        vector.copy(cylinderA.children[0].geometry.vertices[i]);
-        vector.applyMatrix4(cylinderA.children[1].geometry.matrix);
-        copyVectors.push(vector)
-    }
-    for (var j = 0; j < copyVectors.length; j++) {
-        var pos = copyVectors[j].y
-        if (pos.toFixed(0) == -10) {
-            faceDown.push([j])
+function createButtons() {
+    var geometry = new THREE.BoxGeometry(45, 30, 32);
+
+    buttonA = new THREE.Mesh(geometry, makeTexture('icons/10cents.png'));
+    buttonA.position.set(-55, -80, 68);
+    buttonA.rotation.x = Math.PI / 4;
+    buttonA.value = "0,10€";
+    buttonA.objective = "button";
+
+    buttonB = new THREE.Mesh(geometry, makeTexture('icons/20cents.png'));
+    buttonB.position.set(0, -72, 75);
+    buttonB.rotation.x = Math.PI / 4;
+    buttonB.value = "0,20€";
+    buttonB.objective = "button";
+
+    buttonC = new THREE.Mesh(geometry, makeTexture('icons/50cents.png'));
+    buttonC.position.set(55, -72, 75);
+    buttonC.rotation.x = Math.PI / 4;
+    buttonC.value = "0,50€";
+    buttonC.objective = "button";
+
+
+    scene.add(buttonA, buttonB, buttonC);
+}
+
+function createLever() {
+    var geometry = new THREE.CylinderGeometry(40, 40, 70, 32);
+    var material = new THREE.MeshPhongMaterial({
+        color: "green"
+    });
+    var base = new THREE.Mesh(geometry, material);
+    base.position.x = 270;
+    base.rotation.z = Math.PI / 2;
+    lever.add(base);
+
+    var geometry = new THREE.CylinderGeometry(10, 10, 130, 32);
+    var material = new THREE.MeshPhongMaterial({
+        color: "blue"
+    });
+    var arm = new THREE.Mesh(geometry, material);
+    arm.position.x = 270;
+    arm.position.y = 100;
+    lever.add(arm);
+
+    var geometry = new THREE.SphereGeometry( 25, 32, 32 );
+    var material = new THREE.MeshPhongMaterial({
+        color: "red"
+    });
+    var ball = new THREE.Mesh(geometry, material);
+    ball.position.x = 270;
+    ball.position.y = 170;
+    ball.objective = "lever";
+    lever.add(ball);
+
+
+    scene.add(lever)
+}
+
+function makeTexture(textureURL) {
+    var texture = new THREE.TextureLoader().load(textureURL);
+
+    var matArray = [];
+    matArray.push(new THREE.MeshPhongMaterial({
+        color: "red"
+    }));
+    matArray.push(new THREE.MeshPhongMaterial({
+        color: "red"
+    }));
+    matArray.push(new THREE.MeshBasicMaterial({
+        map: texture
+    }));
+    matArray.push(new THREE.MeshPhongMaterial({
+        color: "red"
+    }));
+    matArray.push(new THREE.MeshPhongMaterial({
+        color: "red"
+    }));
+    matArray.push(new THREE.MeshPhongMaterial({
+        color: "red"
+    }));
+    var faceMaterial = new THREE.MultiMaterial(matArray);
+
+    return faceMaterial;
+}
+
+function checkPrize() {
+
+    var preMoney = money;
+
+    if (symbolA == symbolB && symbolB == symbolC) {
+        console.log("All win", symbols[symbolA])
+        switch (symbols[symbolA]) {
+            case "BigWin":
+                money += bet * 100;
+                break;
+            case "Lemon" || "Cherry" || "Banana" || "Watermelon":
+                money += bet * 2;
+                break;
+            case "7":
+                money += bet * 50;
+                break;
+            case "Bar":
+                money += bet * 10;
+        }
+    } else if (symbolA == symbolB || symbolB == symbolC) {
+        console.log("2 win", symbols[symbolB])
+        switch (symbols[symbolB]) {
+            case "BigWin":
+                money += bet * 10;
+                break;
+            case "Lemon" || "Cherry" || "Banana" || "Watermelon":
+                money += bet * 1;
+                break;
+            case "7":
+                money += bet * 5;
+                break;
+            case "Bar":
+                money += bet * 2;
+        }
+    } else if (symbolA == symbolC) {
+        console.log("2 win", symbols[symbolA])
+        switch (symbols[symbolA]) {
+            case "BigWin":
+                money += bet * 10;
+                break;
+            case "Lemon" || "Cherry" || "Banana" || "Watermelon":
+                money += bet * 1;
+                break;
+            case "7":
+                money += bet * 5;
+                break;
+            case "Bar":
+                money += bet * 2;
         }
     }
-
-    checkVertice(parseInt(faceDown[0]), parseInt(faceDown[1]), parseInt(faceDown[2]), parseInt(faceDown[3]))
-
+    console.log(preMoney, money);
 }
