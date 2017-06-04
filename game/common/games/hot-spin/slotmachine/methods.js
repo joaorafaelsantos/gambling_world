@@ -146,7 +146,9 @@ function startSlotMachine() {
     currentCC = 0;
 
     money -= bet;
-    console.log(money)
+    $("#playerMoney").html(money + "€");
+    addLog("-------------------<br>");
+    addLog("Apostou: " + bet + "€<br>");
 
 }
 
@@ -195,19 +197,19 @@ function createButtons() {
     buttonA = new THREE.Mesh(geometry, makeTexture('icons/10cents.png'));
     buttonA.position.set(-55, -80, 68);
     buttonA.rotation.x = Math.PI / 4;
-    buttonA.value = "0,10€";
+    buttonA.value = "0,5€";
     buttonA.objective = "button";
 
     buttonB = new THREE.Mesh(geometry, makeTexture('icons/20cents.png'));
     buttonB.position.set(0, -72, 75);
     buttonB.rotation.x = Math.PI / 4;
-    buttonB.value = "0,20€";
+    buttonB.value = "1€";
     buttonB.objective = "button";
 
     buttonC = new THREE.Mesh(geometry, makeTexture('icons/50cents.png'));
     buttonC.position.set(55, -72, 75);
     buttonC.rotation.x = Math.PI / 4;
-    buttonC.value = "0,50€";
+    buttonC.value = "2€";
     buttonC.objective = "button";
 
 
@@ -233,7 +235,7 @@ function createLever() {
     arm.position.y = 100;
     lever.add(arm);
 
-    var geometry = new THREE.SphereGeometry( 25, 32, 32 );
+    var geometry = new THREE.SphereGeometry(25, 32, 32);
     var material = new THREE.MeshPhongMaterial({
         color: "red"
     });
@@ -277,52 +279,73 @@ function makeTexture(textureURL) {
 function checkPrize() {
 
     var preMoney = money;
+    var prize = parseFloat(0);
 
     if (symbolA == symbolB && symbolB == symbolC) {
         console.log("All win", symbols[symbolA])
         switch (symbols[symbolA]) {
             case "BigWin":
-                money += bet * 100;
+                prize = parseFloat(bet * 100);
                 break;
             case "Lemon" || "Cherry" || "Banana" || "Watermelon":
-                money += bet * 2;
+                prize = parseFloat(bet * 2);
                 break;
             case "7":
-                money += bet * 50;
+                prize = parseFloat(bet * 50);
                 break;
             case "Bar":
-                money += bet * 10;
+                prize = parseFloat(bet * 10);
         }
     } else if (symbolA == symbolB || symbolB == symbolC) {
         console.log("2 win", symbols[symbolB])
         switch (symbols[symbolB]) {
             case "BigWin":
-                money += bet * 10;
+                prize = parseFloat(bet * 10);
                 break;
-            case "Lemon" || "Cherry" || "Banana" || "Watermelon":
-                money += bet * 1;
+            case "Lemon": case "Cherry": case "Banana": case "Watermelon":
+                prize = parseFloat(bet * 1);
                 break;
             case "7":
-                money += bet * 5;
+                prize = parseFloat(bet * 5);
                 break;
             case "Bar":
-                money += bet * 2;
+                prize = parseFloat(bet * 2);
         }
     } else if (symbolA == symbolC) {
         console.log("2 win", symbols[symbolA])
         switch (symbols[symbolA]) {
             case "BigWin":
-                money += bet * 10;
+                prize = parseFloat(bet * 10);
                 break;
-            case "Lemon" || "Cherry" || "Banana" || "Watermelon":
-                money += bet * 1;
+            case "Lemon": case "Cherry": case "Banana": case "Watermelon":
+                prize = parseFloat(bet * 1);
                 break;
             case "7":
-                money += bet * 5;
+                prize = parseFloat(bet * 5);
                 break;
             case "Bar":
-                money += bet * 2;
+                prize = parseFloat(bet * 2);
         }
     }
-    console.log(preMoney, money);
+    console.log(prize)
+    money += prize;
+    addLog("Saiu: " + symbols[symbolA] + " | " + symbols[symbolB] + " | " + symbols[symbolC] + "<br>");
+    if(prize == 0)
+    {
+        addLog("Ganhou: <span class='lose'>" + prize + "€</span><br>");
+    }
+    else if(prize > 0)
+    {
+        addLog("Ganhou: <span class='win'>" + prize + "€</span><br>");
+    }
+    $("#playerMoney").html(money + "€");
 }
+
+
+function addLog(text) {
+    var log = $("#logArea").html();
+    log += text;
+    $("#logArea").html(log);
+    var textarea = document.getElementById('logArea');
+    textarea.scrollTop = textarea.scrollHeight;
+};

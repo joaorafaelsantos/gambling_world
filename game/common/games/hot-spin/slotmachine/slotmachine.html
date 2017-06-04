@@ -7,7 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>HotSpin</title>
 
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script src="../libs/three.min.js"></script>
     <script src="../libs/OrbitControls.js"></script>
@@ -17,14 +24,41 @@
     <script src="../libs/OBJLoader.js"></script>
     <script src="../libs/OBJLoader2.js"></script>
     <script src="../libs/DDSLoader.js"></script>
-    <script src="methods.js"></script>
     <script src="init.js"></script>
+    <script src="methods.js"></script>
+    <script src="hsRender.js"></script>
+
+    <link rel="stylesheet" href="CSS/main.css">
 
 
 </head>
 
-<body style="background: black">
-    <div id="canvas-container" style="position: fixed; left:0px; top:0px"></div>
+<body>
+    <div class="row">
+        <div class="col-xs-9">
+
+            <div class="col-xl-6" id="canvas-container"></div>
+            <div class="col-xl-6" id="downTab">
+                    <div class="col-xs-12" style="border: 1px solid black;">
+                        <div class="col-xs-1">
+                            <img class="img" src="maleIcon.png" alt="">
+                        </div>
+                        <div class="col-xs-11">
+                            <div class="col-xl-6">
+                                <p><b>Player: </b>Daniel</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <p><b>Dinheiro: </b><span id="playerMoney"></span></p>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div id="logArea"></div>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'OpenSans-Light';
+    src: url('fonts/OpenSans-Light.ttf');
+}
+
+#logArea {
+    right: 0px;
+    top: 0px;
+    background: transparent;
+    resize: none;
+    border: 1px solid white;
+    width: 100%;
+    
+    overflow: auto;
+}
+
+#canvas-container {}
+
+body {
+    overflow: hidden;
+    background: lightgrey;
+    font-family: 'OpenSans-Light';
+}
+
+.lose{
+    color: red;
+}
+
+.win{
+    color: green;
+}
+
+.img{
+    width: 100px;
+}
+
+#downTab{
+    text-align: center;
+    padding-left: 300px;
+    padding-right: 300px;
+    border: 1px solid black;
+}
