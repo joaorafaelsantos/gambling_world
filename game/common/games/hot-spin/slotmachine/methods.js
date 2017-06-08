@@ -105,51 +105,51 @@ function createCylinder(posX, index) {
 }
 
 function startSlotMachine() {
+    if (runningCC == false) {
+        var rndA = Math.round(Math.random() * (7));
 
-    var rndA = Math.round(Math.random() * (7));
+        var rndB = Math.round(Math.random() * (7));
+        var rndC = Math.round(Math.random() * (7));
 
-    var rndB = Math.round(Math.random() * (7));
-    var rndC = Math.round(Math.random() * (7));
+        symbolA = rndA + 1;
+        symbolB = rndA + rndB + 2;
+        symbolC = rndA + rndB + rndC + 3;
 
-    symbolA = rndA + 1;
-    symbolB = rndA + rndB + 2;
-    symbolC = rndA + rndB + rndC + 3;
+        rotationCA = (Math.PI * 2) * 3 + (Math.PI * 2 / 7 * rndA + 1) + 0.1;
+        rotationCB = rotationCA + (Math.PI * 2 / 7 * rndB + 1) - 0.1;
+        rotationCC = rotationCB + (Math.PI * 2 / 7 * rndC + 1) - 0.1;
 
-    rotationCA = (Math.PI * 2) * 3 + (Math.PI * 2 / 7 * rndA + 1) + 0.1;
-    rotationCB = rotationCA + (Math.PI * 2 / 7 * rndB + 1) - 0.1;
-    rotationCC = rotationCB + (Math.PI * 2 / 7 * rndC + 1) - 0.1;
+        if (symbolA >= 7) {
+            symbolA -= 7;
+        }
 
-    if (symbolA >= 7) {
-        symbolA -= 7;
+        if (symbolB >= 14) {
+            symbolB -= 14;
+        } else if (symbolB >= 7) {
+            symbolB -= 7;
+        }
+        if (symbolC >= 21) {
+            symbolC -= 21;
+        } else if (symbolC >= 14) {
+            symbolC -= 14;
+        } else if (symbolC >= 7) {
+            symbolC -= 7;
+        }
+
+
+        runningCA = true;
+        runningCB = true;
+        runningCC = true;
+
+        currentCA = 0;
+        currentCB = 0;
+        currentCC = 0;
+
+        money -= bet;
+        $("#playerMoney").html(money + "€");
+        addLog("-------------------<br>");
+        addLog("Bet: " + bet + "€<br>");
     }
-
-    if (symbolB >= 14) {
-        symbolB -= 14;
-    } else if (symbolB >= 7) {
-        symbolB -= 7;
-    }
-    if (symbolC >= 21) {
-        symbolC -= 21;
-    } else if (symbolC >= 14) {
-        symbolC -= 14;
-    } else if (symbolC >= 7) {
-        symbolC -= 7;
-    }
-
-
-    runningCA = true;
-    runningCB = true;
-    runningCC = true;
-
-    currentCA = 0;
-    currentCB = 0;
-    currentCC = 0;
-
-    money -= bet;
-    $("#playerMoney").html(money + "€");
-    addLog("-------------------<br>");
-    addLog("Apostou: " + bet + "€<br>");
-
 }
 
 function createModel() {
@@ -251,6 +251,7 @@ function createLever() {
 
 function makeTexture(textureURL) {
     var texture = new THREE.TextureLoader().load(textureURL);
+    texture.minFilter = THREE.LinearFilter;
 
     var matArray = [];
     matArray.push(new THREE.MeshPhongMaterial({
@@ -302,7 +303,10 @@ function checkPrize() {
             case "BigWin":
                 prize = parseFloat(bet * 10);
                 break;
-            case "Lemon": case "Cherry": case "Banana": case "Watermelon":
+            case "Lemon":
+            case "Cherry":
+            case "Banana":
+            case "Watermelon":
                 prize = parseFloat(bet * 1);
                 break;
             case "7":
@@ -317,7 +321,10 @@ function checkPrize() {
             case "BigWin":
                 prize = parseFloat(bet * 10);
                 break;
-            case "Lemon": case "Cherry": case "Banana": case "Watermelon":
+            case "Lemon":
+            case "Cherry":
+            case "Banana":
+            case "Watermelon":
                 prize = parseFloat(bet * 1);
                 break;
             case "7":
@@ -329,14 +336,11 @@ function checkPrize() {
     }
     console.log(prize)
     money += prize;
-    addLog("Saiu: " + symbols[symbolA] + " | " + symbols[symbolB] + " | " + symbols[symbolC] + "<br>");
-    if(prize == 0)
-    {
-        addLog("Ganhou: <span class='lose'>" + prize + "€</span><br>");
-    }
-    else if(prize > 0)
-    {
-        addLog("Ganhou: <span class='win'>" + prize + "€</span><br>");
+    addLog("Symbols: " + symbols[symbolA] + " | " + symbols[symbolB] + " | " + symbols[symbolC] + "<br>");
+    if (prize == 0) {
+        addLog("Won: <span class='lose'>" + prize + "€</span><br>");
+    } else if (prize > 0) {
+        addLog("Won: <span class='win'>" + prize + "€</span><br>");
     }
     $("#playerMoney").html(money + "€");
 }

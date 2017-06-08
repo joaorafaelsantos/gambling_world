@@ -39,9 +39,9 @@ $(document).ready(function () {
     //camera
     camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 10, 20000);
     // position and point the camera to the center of the scene
-    
-    
-    
+
+
+
 
     var light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
     light.position.set(0, 650, 0);
@@ -145,17 +145,20 @@ window.addEventListener("keydown", function (evt) {
 
 
     if (evt.keyCode == 32) {
-        if (runningCC == false) {
-            startSlotMachine();
-        }
+        startSlotMachine();
+        evt.preventDefault();
     }
-});
+    if ([37, 38, 39, 40].indexOf(evt.keyCode) > -1) {
+        evt.preventDefault();
+    }
+}, false);
 
 window.addEventListener("keyup", function (evt) {
     if (evt.keyCode == 32) {
         rotate = false;
+        evt.preventDefault();
     }
-});
+}, false);
 
 window.addEventListener("click", function (evt) {
     if (runningCC == false) {

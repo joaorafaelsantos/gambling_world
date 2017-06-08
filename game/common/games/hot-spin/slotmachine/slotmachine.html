@@ -34,31 +34,57 @@
 </head>
 
 <body>
-    <div class="row">
-        <div class="col-xs-9">
+    <div class="container-fluid no-gutter ">
+        <div class="row">
+            <div class="col-xs-9">
 
-            <div class="col-xl-6" id="canvas-container"></div>
-            <div class="col-xl-6" id="downTab">
-                    <div class="col-xs-12" style="border: 1px solid black;">
-                        <div class="col-xs-1">
-                            <img class="img" src="maleIcon.png" alt="">
+                <div class="col-xl-12" id="canvas-container"></div>
+
+                <div class="col-xl-12" id="downTab">
+                    <div class="col-xs-3">
+                        <div class="col-xl-6">
+                            <button id="homepBtn">Back</button>
                         </div>
-                        <div class="col-xs-11">
-                            <div class="col-xl-6">
-                                <p><b>Player: </b>Daniel</p>
+                        <div class="col-xl-6">
+                            <button id="clearBtn">Clear Log</button>
+                        </div>
+                    </div>
+                    <div class="col-xs-6" id="playerStats">
+                        <div class="col-xl-6">
+                            <p><b>Player: </b>Daniel</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <p><b>Money: </b><span id="playerMoney"></span></p>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="col-xl-6">
+                            <button id="playBtn">PLAY</button>
+                        </div>
+                        <div class="col-xl-6" id="betDiv">
+                            <div class="col-xs-4">
+                                <p id="bet">Bet:</p>
                             </div>
-                            <div class="col-xl-6">
-                                <p><b>Dinheiro: </b><span id="playerMoney"></span></p>
+                            <div class="col-xs-8">
+                                <form action="">
+                                    <input type="radio" name="money" value="0.5"><span class="inputVal"> 0,5€</span><br>
+                                    <input type="radio" name="money" value="1"><span class="inputVal"> 1€</span><br>
+                                    <input type="radio" name="money" value="2"><span class="inputVal"> 2€</span>
+                                </form>
                             </div>
+
                         </div>
                     </div>
 
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div id="logArea"></div>
             </div>
         </div>
-        <div class="col-xs-3">
-            <div id="logArea"></div>
-        </div>
     </div>
+
+
 </body>
 
 </html>

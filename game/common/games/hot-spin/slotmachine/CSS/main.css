@@ -6,37 +6,86 @@
 #logArea {
     right: 0px;
     top: 0px;
-    background: transparent;
+    background-color: #282828;
     resize: none;
-    border: 1px solid white;
+    color: white;
     width: 100%;
-    
     overflow: auto;
 }
 
 #canvas-container {}
 
 body {
-    overflow: hidden;
+    overflow-y: hidden;
     background: lightgrey;
     font-family: 'OpenSans-Light';
 }
 
-.lose{
+.lose {
     color: red;
 }
 
-.win{
+.win {
     color: green;
 }
 
-.img{
+.img {
     width: 100px;
 }
 
-#downTab{
+#downTab {
     text-align: center;
-    padding-left: 300px;
-    padding-right: 300px;
-    border: 1px solid black;
+    background-image: url("background.jpg");
+    /*background-size: 1438px 661px;*/
+     background-repeat: no-repeat;
+    /*height: 100px;*/
+}
+
+
+
+.container-fluid.no-gutter [class*='col-']:not(:first-child),
+.container-fluid.no-gutter [class*='col-']:not(:last-child) {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.container-fluid.no-gutter {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#playerStats{
+    font-size: 36px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+#playBtn{
+    width: 100%;
+    height: 100px;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+#clearBtn{
+    width: 50%;
+    height: 50px;
+
+}
+
+#homepBtn{
+    width: 50%;
+    height: 50px;
+}
+
+.inputVal{
+    font-size: 20px;
+    
+}
+
+#betDiv{
+    background-color: rgba(255, 255, 255, 0.6);
+    height: 85px;
+}
+#bet{
+    margin-top: 32px;
 }
