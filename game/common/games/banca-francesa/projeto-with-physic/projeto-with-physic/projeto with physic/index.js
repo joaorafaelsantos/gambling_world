@@ -22,18 +22,26 @@ window.onload = function () {
         f6 = 0;
     var camera, scene, renderer, mesh, helper2, geometry, collision, planoInclinado, total = 0,
         timer;
+    var dinheiroTotal, bet, typeOfGambler, rest
 
-    var initScene, render2, render_stats, physics_stats, table, spawnChair,  table_material, chair_material, light;
-    var chair, back, legs, animacao = true, wall, ground2,
-        soma = 0;
+    var initScene, render2, render_stats, physics_stats, ground, spawnChair,
+        ground_material, chair_material, light;
+    var chair, back, legs, animacao = true,
+        premio = false,
+        soma = 0,
+        abertura = 0;
+    var table, table2, table2_material, table_material, wall, wall_material, ground2, ground2_material
+
     var dados = [];
     var valorAposta = 5
-    var tipoAposta = "Pequeno"
+    var tipoAposta = "Pequeno";
+
+    var stopped = false;
 
 
     var faces = [{
-        "f1": [1, 3, 4, 6]
-    },
+            "f1": [1, 3, 4, 6]
+        },
         {
             "f2": [2, 3, 6, 7]
         },
@@ -72,15 +80,15 @@ window.onload = function () {
         camera = new THREE.PerspectiveCamera(
             35,
             (window.innerWidth * 0.5) / (window.innerHeight * 0.5),
-            1,
+            0.1,
             1000
         );
 
 
-        controls = new THREE.OrbitControls(camera);
-        controls.addEventListener('change', function () {
-            renderer.render(scene, camera);
-        });
+        // controls = new THREE.OrbitControls(camera);
+        // controls.addEventListener('change', function () {
+        //     renderer.render(scene, camera);
+        // });
 
         camera.position.set(350, 220, 0);
         camera.lookAt(scene.position);
@@ -103,17 +111,21 @@ window.onload = function () {
         light.shadowDarkness = .7;
         scene.add(light);
 
+
+
         // Materials
-        table_material = Physijs.createMaterial(
+        table2_material = Physijs.createMaterial(
             new THREE.MeshBasicMaterial({
-                color: 0x004c0f
+                color: 0x421414
             }),
             .8, // high friction
             .8 // low restitution
         );
-        table2_material = Physijs.createMaterial(
+
+
+        ground_material = Physijs.createMaterial(
             new THREE.MeshBasicMaterial({
-                color: 0x421414
+                color: 0x004c0f
             }),
             .8, // high friction
             .8 // low restitution
@@ -123,7 +135,9 @@ window.onload = function () {
 
 
         wall_material = Physijs.createMaterial(
-            new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('img/wall.jpg') }),
+            new THREE.MeshLambertMaterial({
+                map: THREE.ImageUtils.loadTexture('img/wall.jpg')
+            }),
             .8, // high friction
             .8 // low restitution
         );
@@ -166,27 +180,28 @@ window.onload = function () {
         scene.add(ground2);
 
 
-        // table
-        table = new Physijs.CylinderMesh(
+
+
+
+        // Ground
+        ground = new Physijs.CylinderMesh(
             new THREE.CylinderGeometry(200, 200, 0.1, 32, 1, false, 0, 3.2),
-            table_material,
+            ground_material,
             0 // mass
         );;
-        table.receiveShadow = true;
-        table.position.y = 0
-        table.position.x = -40
+        ground.receiveShadow = true;
+        ground.position.y = 0
+        ground.position.x = -40
 
-        scene.add(table);
+        scene.add(ground);
 
-        
-        // table
         table2 = new Physijs.CylinderMesh(
             new THREE.CylinderGeometry(198, 205, 5, 32, 1, true, 0, 3.2),
             table2_material,
             0 // mass
         );;
         table2.receiveShadow = true;
-        table2.position.y = 0
+        table2.position.y = -2.5
         table2.position.x = -40
 
         scene.add(table2);
@@ -198,7 +213,9 @@ window.onload = function () {
         var axes = new THREE.AxisHelper(200);
 
 
-        renderer = new THREE.WebGLRenderer();
+        renderer = new THREE.WebGLRenderer({
+            antilias: true
+        });
         renderer.setSize(window.innerWidth * 0.7, window.innerHeight * 0.7);
 
 
@@ -210,49 +227,45 @@ window.onload = function () {
 
 
         render();
-        animate();
-
+        scene.simulate();
 
     }
 
     function render() {
-
-
-        scene.simulate();
-        renderer.render(scene, camera);
-
-    }
-
-
-    // hold object state
-    function animate() {
-        // console.log(dados[0].position)
-
+        // console.log(animacao, dados[2].getLinearVelocity().y, dados[2].position.y)
+        var count = 0;
 
         for (var i = 0; i < dados.length; i++) {
-            if (dados[i].position.y.toFixed(0) == 5) {
-                dados[i].___dirtyPosition = true
-                setTimeout(function () {
-                    animacao = false
-                }, 2000);
+
+            if (dados[i].getLinearVelocity().x == 0.0 && dados[i].getLinearVelocity().y == 0.0 && dados[i].getLinearVelocity().z == 0.0 && dados[i].position.y.toFixed(0) < 20) {
+                count++;
+
             }
         }
-
-        //requestAnimationFrame(animate);
-
-        if (animacao == true) {
-            requestAnimationFrame(animate);
-        } else {
+        if (count == dados.length) {
+            $('#play').prop('disabled', false);
+            animacao = false
             for (var i = 0; i < dados.length; i++) {
                 copyVector(dados[i])
-                console.log(f1, f2, f3)
-                // soma = f1 + f2 + f3 + f4 + f5 + f6
-                console.log("soma:", soma)
+            }
+            if (premio == false && abertura > 0) {
+
+                checkPrice()
             }
 
-            checkPrice()
+
         }
-        render();
+
+
+
+        if (animacao == true) {
+            $('#play').prop('disabled', true);
+            renderer.render(scene, camera);
+
+        }
+        //console.log(abertura)
+        requestAnimationFrame(render);
+
     }
 
 
@@ -299,14 +312,13 @@ window.onload = function () {
             cube.__dirtyRotation = true;
 
             cube.position.y = 40;
-            cube.position.x = -5 + i * 35
-            
+            cube.position.x = -20 + i * 20
 
-            cube.rotation.set(
-                Math.random() * Math.PI * 2,
-                Math.random() * Math.PI * 2,
-                Math.random() * Math.PI * 2
-            );
+            // cube.rotation.set(
+            //     Math.random() * Math.PI * 2,
+            //     Math.random() * Math.PI * 2,
+            //     Math.random() * Math.PI * 2
+            // );
 
             dados.push(cube)
             scene.add(cube);
@@ -329,33 +341,33 @@ window.onload = function () {
                 if (meshVert == `${face[f]}`) {
                     //  console.log(`${f} = ${face[f]}`);
                     if (`${f}` == "f1") {
-                        console.log("face de cima é 4")
+                        // console.log("face de cima é 4")
                         //f4 = 4
                         soma += 4
                     }
                     if (`${f}` == "f2") {
-                        console.log("face de cima é 5")
+                        //console.log("face de cima é 5")
                         // f5 = 5
                         soma += 5
                     }
                     if (`${f}` == "f3") {
-                        console.log("face de cima é 6")
+                        //console.log("face de cima é 6")
                         // f6 = 6
                         soma += 6
-                        console.log(f)
+
                     }
                     if (`${f}` == "f4") {
-                        console.log("face de cima é 1")
+                        // console.log("face de cima é 1")
                         // f1 = 1
                         soma += 1
                     }
                     if (`${f}` == "f5") {
-                        console.log("face de cima é 2")
+                        // console.log("face de cima é 2")
                         // f2 = 2
                         soma += 2
                     }
                     if (`${f}` == "f6") {
-                        console.log("face de cima é 3")
+                        // console.log("face de cima é 3")
                         //f3 = 3
                         soma += 3
                     }
@@ -389,74 +401,114 @@ window.onload = function () {
                 faceDown.push([j])
             }
         }
-
         checkVertice(parseInt(faceDown[0]), parseInt(faceDown[1]), parseInt(faceDown[2]), parseInt(faceDown[3]))
 
-
-
-
     }
-
-
 
 
 
     function checkPrice() {
+        $("#res").text(soma)
         if ((soma == 5) || (soma == 6) || (soma == 7)) {
 
-            if (tipoAposta == "Pequeno") {
-                alert("ganhaste")
+            if (typeOfGambler == "Pequeno") {
+                console.log("ganhaste")
+                $("#resultado").append("<div class='row' id='win'> Ganhaste </div>");
+                $("#valor").text(rest + (2 * bet));
             } else {
-                alert("perdeste")
+                $("#resultado").append(" <div class='row' id='lose'> Perdeste </div>");
+
             }
+            premio = true
+
+
         } else if ((soma == 14) || (soma == 15) || (soma == 16)) {
 
 
-            if (tipoAposta == "Grande") {
-                alert("ganhaste")
+            if (typeOfGambler == "Grande") {
+                $("#resultado").append("<div class='row' id='win'> Ganhaste </div>");
+                $("#valor").text(rest + (2 * bet));
             } else {
-                alert("perdeste")
-
+                $("#resultado").append(" <div class='row' id='lose'> Perdeste </div>");
             }
+            premio = true
+
 
         } else {
-            // scene.remove(dados[1]);
-            // scene.remove(dados[2]);
-            // scene.remove(dados[0]);
-            // dados = [];
-            // // alert("ola")
 
-            // if (dados.length == 0) {
+            for (var i = 0; i < dados.length; i++) {
+                dados[i].position.y = 40;
+                dados[i].__dirtyPosition = true;
 
-
-            //     createDices();
-            //     render();
-            //     //animacao = true
-            //     animate();
-
-
-            // }
-
-            // 
-
-            // for (var i = 0; i < dados.length; i++) {
-            //     dados[i].position.y = 40
-            // }
-
-            // render();
-            // animacao = true
-            // animate();
-
-
-            soma = 0
+                dados[i].rotation.set(
+                    Math.random() * Math.PI * 2,
+                    Math.random() * Math.PI * 2,
+                    Math.random() * Math.PI * 2
+                );
+                dados[i].__dirtyRotation = true;
+            }
+            animacao = true
         }
-
-
-
+        soma = 0
 
     }
 
 
 
+
+
+    $("#play").on("click", function () {
+
+
+        dinheiroTotal = parseInt($("#valor").text());
+        bet = parseInt($("#bet").val());
+        typeOfGambler = $("#typeOfGambler").val();
+        rest = dinheiroTotal - bet
+        console.log(dinheiroTotal, bet, typeOfGambler)
+
+
+
+        if (bet < dinheiroTotal) {
+            $("#valor").text(rest);
+            console.log("entrei play")
+            for (var i = 0; i < dados.length; i++) {
+                dados[i].position.y = 40;
+                dados[i].__dirtyPosition = true;
+
+                dados[i].rotation.set(
+                    Math.random() * Math.PI * 2,
+                    Math.random() * Math.PI * 2,
+                    Math.random() * Math.PI * 2
+                );
+                dados[i].__dirtyRotation = true;
+            }
+            animacao = true
+            premio = false
+            soma = 0;
+            abertura++;
+        } else {
+            $("#resultado").append(" <div class='row' id='lose'> Não tem saldo </div>");
+
+        }
+
+    });
+
+    if (animacao == true && abertura > 0) {
+
+
+    } else {
+        $('#play').prop('disabled', false);
+    }
+
+    $("#back").on("click", function () {});
+
+    $("#clear").on("click", function () {
+
+        $("#resultado").text("<h1> Resultado <span id='res'></span></h1>")
+
+
+
+
+    });
 
 }
