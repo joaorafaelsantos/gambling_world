@@ -18,12 +18,6 @@
 
     <script src="../libs/three.min.js"></script>
     <script src="../libs/OrbitControls.js"></script>
-    <script src="../libs/FBXLoader2.js"></script>
-    <script src="../libs/Detector.js"></script>
-    <script src="../libs/MTLLoader.js"></script>
-    <script src="../libs/OBJLoader.js"></script>
-    <script src="../libs/OBJLoader2.js"></script>
-    <script src="../libs/DDSLoader.js"></script>
     <script src="init.js"></script>
     <script src="methods.js"></script>
     <script src="hsRender.js"></script>
@@ -63,12 +57,12 @@
                         </div>
                         <div class="col-xl-6" id="betDiv">
                             <div class="col-xs-4">
-                                <p id="bet">Bet:</p>
+                                <p id="bet"><b>Bet:</b></p>
                             </div>
                             <div class="col-xs-8">
-                                <form action="">
-                                    <input type="radio" name="money" value="0.5"><span class="inputVal"> 0,5€</span><br>
-                                    <input type="radio" name="money" value="1"><span class="inputVal"> 1€</span><br>
+                                <form id="radioBtn">
+                                    <input type="radio" name="money" value="0.5" checked><span class="inputVal"> 0,5€</span>
+                                    <input type="radio" name="money" value="1"><span class="inputVal"> 1€</span>
                                     <input type="radio" name="money" value="2"><span class="inputVal"> 2€</span>
                                 </form>
                             </div>

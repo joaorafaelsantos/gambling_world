@@ -7,45 +7,54 @@ function createCylinder(posX, index) {
 
     var matArray = [];
     var texture = new THREE.TextureLoader().load('icons/7.jpg');
+    texture.minFilter = THREE.LinearFilter;
     matArray.push(new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.FrontSide
     }));
     var texture = new THREE.TextureLoader().load('icons/banana.jpg');
+    texture.minFilter = THREE.LinearFilter;
     matArray.push(new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.FrontSide
     }));
     var texture = new THREE.TextureLoader().load('icons/bar.jpg');
+    texture.minFilter = THREE.LinearFilter;
     matArray.push(new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.FrontSide
     }));
     var texture = new THREE.TextureLoader().load('icons/cherry.jpg');
+    texture.minFilter = THREE.LinearFilter;
     matArray.push(new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.FrontSide
     }));
     var texture = new THREE.TextureLoader().load('icons/lemon.jpg');
+    texture.minFilter = THREE.LinearFilter;
     matArray.push(new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.FrontSide
     }));
     var texture = new THREE.TextureLoader().load('icons/bigwin.jpg');
+    texture.minFilter = THREE.LinearFilter;
     matArray.push(new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.FrontSide
     }));
     var texture = new THREE.TextureLoader().load('icons/watermelon.jpg');
+    texture.minFilter = THREE.LinearFilter;
     matArray.push(new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.FrontSide
     }));
 
+    var textures = ['icons/7.jpg', 'icons/banana.jpg', 'icons/bar.jpg', 'icons/cherry.jpg', 'icons/lemon.jpg', 'icons/bigwin.jpg', 'icons/watermelon.jpg'];
+
     var ang = 0;
 
     for (var i = 0; i < 7; i++) {
-        var face = new THREE.Mesh(geometry, matArray[i]);
+        var face = new THREE.Mesh(geometry, makeTexture(textures[i]));
         face.rotation.x = ang;
         if (i == 0) {
             face.position.z = 0.02;
@@ -140,15 +149,21 @@ function startSlotMachine() {
         runningCA = true;
         runningCB = true;
         runningCC = true;
+        runLever = true;
+        sideLever = true;
 
         currentCA = 0;
         currentCB = 0;
         currentCC = 0;
 
+        $("input[type=radio]").prop("disabled", true);
+
         money -= bet;
         $("#playerMoney").html(money + "€");
         addLog("-------------------<br>");
         addLog("Bet: " + bet + "€<br>");
+        sound_Running.currentTime = 0;
+        sound_Running.play();
     }
 }
 
@@ -191,7 +206,75 @@ function createModel() {
 
 }
 
-function createButtons() {
+function createMachine() {
+    var geometry = new THREE.BoxGeometry(475, 900, 100);
+    var texture = new THREE.TextureLoader().load('img/body.png');
+    var frontMaterial = new THREE.MeshPhongMaterial({
+        map: texture
+    });
+    var backMaterial = new THREE.MeshPhongMaterial({
+        color: "gray"
+    });
+    var materials = [backMaterial, // Left side
+        backMaterial, // Right side
+        backMaterial, // Top side
+        backMaterial, // Bottom side
+        frontMaterial, // Front side
+        backMaterial // Back side
+    ];
+    var box = new THREE.Mesh(geometry, materials);
+    box.castShadow = true;
+
+    scene.add(box);
+
+
+
+    var geometry = new THREE.BoxGeometry(400, 125, 50);
+    var backMaterial = new THREE.MeshPhongMaterial({
+        color: "gray"
+    });
+    //PANEL
+    var texture = new THREE.TextureLoader().load('img/hot-spin.png');
+    var frontMaterial = new THREE.MeshPhongMaterial({
+        map: texture
+    });
+
+    var materials = [backMaterial, // Left side
+        backMaterial, // Right side
+        backMaterial, // Top side
+        backMaterial, // Bottom side
+        frontMaterial, // Front side
+        backMaterial // Back side
+    ];
+    var panel = new THREE.Mesh(geometry, materials);
+    panel.position.set(0, 220, 30);
+    scene.add(panel);
+
+}
+
+function createBackground() {
+    var geometry = new THREE.BoxGeometry(2000, 1000, 1);
+    var texture = new THREE.TextureLoader().load('background.jpg');
+    var frontMaterial = new THREE.MeshPhongMaterial({
+        map: texture
+    });
+    var backMaterial = new THREE.MeshPhongMaterial({
+        color: "gray"
+    });
+    var materials = [backMaterial, // Left side
+        backMaterial, // Right side
+        backMaterial, // Top side
+        backMaterial, // Bottom side
+        frontMaterial, // Front side
+        backMaterial // Back side
+    ];
+    var background = new THREE.Mesh(geometry, materials);
+    background.position.set(0, 0, -50);
+    background.receiveShadow = true;
+    scene.add(background);
+}
+
+/*function createButtons() {
     var geometry = new THREE.BoxGeometry(45, 30, 32);
 
     buttonA = new THREE.Mesh(geometry, makeTexture('icons/10cents.png'));
@@ -214,12 +297,12 @@ function createButtons() {
 
 
     scene.add(buttonA, buttonB, buttonC);
-}
+}*/
 
 function createLever() {
     var geometry = new THREE.CylinderGeometry(40, 40, 70, 32);
     var material = new THREE.MeshPhongMaterial({
-        color: "green"
+        color: "black"
     });
     var base = new THREE.Mesh(geometry, material);
     base.position.x = 270;
@@ -228,7 +311,7 @@ function createLever() {
 
     var geometry = new THREE.CylinderGeometry(10, 10, 130, 32);
     var material = new THREE.MeshPhongMaterial({
-        color: "blue"
+        color: "gray"
     });
     var arm = new THREE.Mesh(geometry, material);
     arm.position.x = 270;
@@ -244,6 +327,7 @@ function createLever() {
     ball.position.y = 170;
     ball.objective = "lever";
     lever.add(ball);
+    lever.castShadow = true;
 
 
     scene.add(lever)
@@ -253,28 +337,19 @@ function makeTexture(textureURL) {
     var texture = new THREE.TextureLoader().load(textureURL);
     texture.minFilter = THREE.LinearFilter;
 
-    var matArray = [];
-    matArray.push(new THREE.MeshPhongMaterial({
-        color: "red"
-    }));
-    matArray.push(new THREE.MeshPhongMaterial({
-        color: "red"
-    }));
-    matArray.push(new THREE.MeshBasicMaterial({
-        map: texture
-    }));
-    matArray.push(new THREE.MeshPhongMaterial({
-        color: "red"
-    }));
-    matArray.push(new THREE.MeshPhongMaterial({
-        color: "red"
-    }));
-    matArray.push(new THREE.MeshPhongMaterial({
-        color: "red"
-    }));
-    var faceMaterial = new THREE.MultiMaterial(matArray);
+    var sideMaterial =new THREE.MeshPhongMaterial({
+        color: "white"
+    });
 
-    return faceMaterial;
+    var frontMaterial = new THREE.MeshPhongMaterial({
+        
+        map: texture
+    });
+
+    var matArray = [sideMaterial,sideMaterial,sideMaterial,frontMaterial,sideMaterial,sideMaterial];
+    
+
+    return matArray;
 }
 
 function checkPrize() {
@@ -283,66 +358,90 @@ function checkPrize() {
     var prize = parseFloat(0);
 
     if (symbolA == symbolB && symbolB == symbolC) {
-        console.log("All win", symbols[symbolA])
         switch (symbols[symbolA]) {
             case "BigWin":
                 prize = parseFloat(bet * 100);
+                sound_BIGWIN.currentTime = 0;
+                sound_BIGWIN.play();
                 break;
             case "Lemon" || "Cherry" || "Banana" || "Watermelon":
                 prize = parseFloat(bet * 2);
+                sound_3Win.currentTime = 0;
+                sound_3Win.play();
                 break;
             case "7":
                 prize = parseFloat(bet * 50);
+                sound_BIGWIN.currentTime = 0;
+                sound_BIGWIN.play();
                 break;
             case "Bar":
                 prize = parseFloat(bet * 10);
+                sound_3Win.currentTime = 0;
+                sound_3Win.play();
+
         }
     } else if (symbolA == symbolB || symbolB == symbolC) {
-        console.log("2 win", symbols[symbolB])
         switch (symbols[symbolB]) {
             case "BigWin":
                 prize = parseFloat(bet * 10);
+                sound_Win.currentTime = 0;
+                sound_Win.play();
                 break;
             case "Lemon":
             case "Cherry":
             case "Banana":
             case "Watermelon":
                 prize = parseFloat(bet * 1);
+                sound_Win.currentTime = 0;
+                sound_Win.play();
                 break;
             case "7":
                 prize = parseFloat(bet * 5);
+                sound_Win.currentTime = 0;
+                sound_Win.play();
                 break;
             case "Bar":
                 prize = parseFloat(bet * 2);
+                sound_Win.currentTime = 0;
+                sound_Win.play();
         }
     } else if (symbolA == symbolC) {
-        console.log("2 win", symbols[symbolA])
         switch (symbols[symbolA]) {
             case "BigWin":
                 prize = parseFloat(bet * 10);
+                sound_Win.currentTime = 0;
+                sound_Win.play();
                 break;
             case "Lemon":
             case "Cherry":
             case "Banana":
             case "Watermelon":
                 prize = parseFloat(bet * 1);
+                sound_Win.currentTime = 0;
+                sound_Win.play();
                 break;
             case "7":
                 prize = parseFloat(bet * 5);
+                sound_Win.currentTime = 0;
+                sound_Win.play();
                 break;
             case "Bar":
                 prize = parseFloat(bet * 2);
+                sound_Win.currentTime = 0;
+                sound_Win.play();
         }
     }
-    console.log(prize)
     money += prize;
     addLog("Symbols: " + symbols[symbolA] + " | " + symbols[symbolB] + " | " + symbols[symbolC] + "<br>");
     if (prize == 0) {
         addLog("Won: <span class='lose'>" + prize + "€</span><br>");
+        sound_Lose.currentTime = 0;
+        sound_Lose.play();
     } else if (prize > 0) {
         addLog("Won: <span class='win'>" + prize + "€</span><br>");
     }
     $("#playerMoney").html(money + "€");
+    $("input[type=radio]").prop("disabled", false);
 }
 
 
@@ -353,3 +452,15 @@ function addLog(text) {
     var textarea = document.getElementById('logArea');
     textarea.scrollTop = textarea.scrollHeight;
 };
+
+function simulateBIGWIN() {
+    symbolA = 0;
+    symbolB = 0;
+    symbolC = 0;
+    cylinderA.rotation.x = 0.2;
+    cylinderB.rotation.x = 0.2;
+    cylinderC.rotation.x = 0.2;
+    addLog("-------------------<br>");
+    addLog("Bet: " + bet + "€<br>");
+    checkPrize();
+}

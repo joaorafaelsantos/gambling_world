@@ -8,6 +8,9 @@ var lever = new THREE.Object3D();
 var buttonA, buttonB, buttonC;
 var rotationCA, rotationCB, rotationCC;
 
+var runLever = false,
+    sideLever = true;
+
 var currentCA = 0,
     currentCB = 0,
     currentCC = 0;
@@ -19,6 +22,15 @@ var mixers = [];
 var symbols = ["BigWin", "Lemon", "Cherry", "Bar", "Banana", "7", "Watermelon"];
 var symbolA, symbolB, symbolC;
 
+var sound_Running = new Audio('sounds/running.mp3');
+var sound_Win = new Audio('sounds/win.wav');
+var sound_3Win = new Audio('sounds/3win.wav');
+var sound_Lose = new Audio('sounds/lose.wav');
+var sound_EndA = new Audio('sounds/endLine.mp3');
+var sound_EndB = new Audio('sounds/endLine.mp3');
+var sound_EndC = new Audio('sounds/endLine.mp3');
+var sound_BIGWIN = new Audio('sounds/BIGWIN.mp3');
+
 
 var money = 100;
 var bet = 0.50;
@@ -29,6 +41,12 @@ var rWidth, rHeight;
 $(document).ready(function () {
 
     $("#playerMoney").html(money + "€");
+
+    bet = $("input:checked").val();
+
+    $("input[type=radio]").click(function () {
+        bet = $(this).val();
+    });
 
     //scene
     scene = new THREE.Scene();
@@ -44,8 +62,22 @@ $(document).ready(function () {
 
 
     var light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
-    light.position.set(0, 650, 0);
+    light.position.set(0, 0, -100);
     scene.add(light);
+
+    var spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(0, -20, 200);
+
+    spotLight.castShadow = true;
+
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+
+    spotLight.shadow.camera.near = 500;
+    spotLight.shadow.camera.far = 4000;
+    spotLight.shadow.camera.fov = 30;
+
+    scene.add(spotLight);
 
     //renderer
     var renderer = new THREE.WebGLRenderer({
@@ -66,26 +98,26 @@ $(document).ready(function () {
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
 
-
-    createModel();
-    createButtons();
+    createMachine();
+    // createModel();
+    // createButtons();
     createLever();
+    createBackground();
 
     for (var i = 0; i < 3; i++) {
         createCylinder(10 * i, i);
     }
 
     allCylinders.scale.set(7.55, 8.55, 7.55);
-    allCylinders.position.set(-75, 55, -25);
+    allCylinders.position.set(-75, 50, -25);
     scene.add(allCylinders);
     var cPos = {
         x: allCylinders.position.x + 70,
-        y: allCylinders.position.y,
+        y: allCylinders.position.y + 10,
         z: allCylinders.position.z
     };
-    console.log(cPos)
-    camera.position.set(0, 150, 591);
-    camera.lookAt(cPos);
+    camera.position.set(0, 50, 600);
+    // camera.lookAt(cPos);
 
 
     render();
@@ -94,6 +126,17 @@ $(document).ready(function () {
     //render scene
     function animate() {
 
+        if (runLever == true) {
+            if (lever.rotation.x <= 1 && sideLever == true) {
+                lever.rotation.x += 0.1;
+            } else {
+                sideLever = false;
+                lever.rotation.x -= 0.1;
+                if (lever.rotation.x <= 0) {
+                    runLever = false;
+                }
+            }
+        }
 
         if (runningCA == true) {
 
@@ -102,6 +145,7 @@ $(document).ready(function () {
             if (currentCA >= rotationCA) {
                 runningCA = false;
                 cylinderA.rotation.x = rotationCA;
+                sound_EndA.play();
             }
         }
 
@@ -111,6 +155,7 @@ $(document).ready(function () {
             if (currentCB >= rotationCB) {
                 runningCB = false;
                 cylinderB.rotation.x = rotationCB;
+                sound_EndB.play();
             }
         }
 
@@ -120,6 +165,8 @@ $(document).ready(function () {
             if (currentCC >= rotationCC) {
                 runningCC = false;
                 cylinderC.rotation.x = rotationCC;
+                sound_Running.pause();
+                sound_EndC.play();
 
                 checkPrize();
 
@@ -159,43 +206,3 @@ window.addEventListener("keyup", function (evt) {
         evt.preventDefault();
     }
 }, false);
-
-window.addEventListener("click", function (evt) {
-    if (runningCC == false) {
-        var  mouse3D =  new  THREE.Vector2(
-            (evt.clientX / rWidth) * 2 - 1,    //x
-             -(evt.clientY / rHeight) * 2 + 1); //y   
-        var raycaster = new THREE.Raycaster();
-        // update the picking ray with the camera and mouse position
-        raycaster.setFromCamera(mouse3D, camera);
-        // calculate objects intersecting the picking ray
-        var intersectsC = raycaster.intersectObjects(scene.children);
-        var intersectsP = raycaster.intersectObjects(lever.children);
-        console.log(intersectsP);
-        if (intersectsC.length > 0 && intersectsC[0].object.objective == "button") {
-
-            buttonA.position.set(-55, -72, 75);
-            buttonB.position.set(0, -72, 75);
-            buttonC.position.set(55, -72, 75);
-
-            if (intersectsC[0].object.value == "0,5€") {
-                buttonA.position.set(-55, -80, 68);
-                bet = 0.50;
-            } else if (intersectsC[0].object.value == "1€") {
-                buttonB.position.set(0, -80, 68);
-                bet = 1;
-            } else if (intersectsC[0].object.value == "2€") {
-                buttonC.position.set(55, -80, 68);
-                bet = 2;
-            }
-        } else if (intersectsP.length > 0 && intersectsP[0].object.objective == "lever") {
-            lever.rotation.x += 0.1;
-        }
-    }
-
-
-});
-
-window.addEventListener("click mousemove", function (evt) {
-    console.log(123)
-});
