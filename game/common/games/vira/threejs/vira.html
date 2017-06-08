@@ -1,14 +1,45 @@
 <html>
 
 <head>
-    <script src="../../../../libs/three.js/r85/js/three.min.js"></script>
-    <script src="../../../../libs/orbit-controls/OrbitControls.js"></script>
-    <script src="vira.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
 
 </head>
 
-<body style="background: black">
-    <div id="canvas-container" style="position: absolute; left:0px; top:0px"></div>
+<body style="background-color: rgb(20, 20, 20);">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div id="canvas-container" class="text-center col-md-10"></div>
+            <div id="log" class="col-md-2">
+                <div id="title">
+                    <h5 style='color: white;'>PRIZE LOG:</h5>
+                </div>
+                <div id="listLog"></div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div id="buttonPanel" class="text-center col-md-10" style="padding-top: 10px;">
+                <button id="btnBack" class="btn btn-danger">BACK</button>
+                <button id="btnPlay" class="btn btn-success" disabled>PLAY AGAIN</button>
+                <button id="btnClear" class="btn btn-warning" disabled>CLEAR LOG</button>
+            </div>
+        </div>
+
+    </div>
+
+
+    </div>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="../../../../libs/three.js/r85/js/three.min.js"></script>
+    <script src="../../../../libs/orbit-controls/OrbitControls.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <script src="vira.js"></script>
 </body>
+
 
 </html>

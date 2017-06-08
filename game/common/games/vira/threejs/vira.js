@@ -9,9 +9,11 @@ var camera;
 var renderer;
 var cards;
 var miniCards;
-var probability = '1/5'
+var probability = '1/13'
+var rWidth, rHeight;
 
-window.onload = function init() {
+// window.onload = function init() {
+$(function () {
     //scene
     scene = new THREE.Scene();
 
@@ -25,7 +27,12 @@ window.onload = function init() {
     renderer = new THREE.WebGLRenderer({
         antialias: true
     });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    rWidth = $("#canvas-container").width();
+    rHeight = window.innerHeight / (window.innerWidth / $("#canvas-container").width());
+    renderer.setSize(rWidth, rHeight);
+
+    //renderer.setSize(window.innerWidth, window.innerHeight);
 
     //controls
     // var controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -150,6 +157,15 @@ window.onload = function init() {
     }
 
     // Game Mechanic
+    var tempProbability = probability;
+    if (probability.length == 4) {
+        tempProbability = probability[2] + probability[3];
+    } else {
+        tempProbability = probability[2];
+    }
+    var formProbability = ((1.5 * tempProbability) / 2) * 5;
+
+
     function gameChooser(gameMode) {
         switch (gameMode) {
             case '1/5':
@@ -204,8 +220,9 @@ window.onload = function init() {
         return array;
     }
 
-    var cardsLock = false;;
+    var cardsLock = false;
     var miniCardsLock = false;
+    var lock = false;
     var card;
     var miniCard;
 
@@ -214,8 +231,8 @@ window.onload = function init() {
         // calculate mouse position in normalized device coordinates
         // (-1 to +1) for both components
 
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        mouse.x = (event.clientX / rWidth) * 2 - 1;
+        mouse.y = -(event.clientY / rHeight) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
         // calculate objects intersecting the picking ray
@@ -250,13 +267,19 @@ window.onload = function init() {
             }
         }
 
-        if (cardsLock && miniCardsLock) {
+        if (cardsLock && miniCardsLock && !lock) {
             if (card == miniCard) {
-                console.log('--- CONGRATULATIONS, YOU WIN!!! ---');
-                setTimeout(restartGame, 2000);
+                lock = true;
+                var content = "<h5 style='color: green;'>CONGRATULATIONS, YOU WIN!!!</h5>"
+                $("#listLog").append(content);
+                $("#btnPlay").prop('disabled', false);
+                $("#btnClear").prop('disabled', false);
             } else {
-                console.log('--- LOSE, TRY AGAIN! ---');
-                setTimeout(restartGame, 2000);
+                lock = true;
+                var content = "<h5 style='color: red;'>LOSE, TRY AGAIN!</h5>"
+                $("#listLog").append(content);
+                $("#btnPlay").prop('disabled', false);
+                $("#btnClear").prop('disabled', false);
             }
         }
 
@@ -265,9 +288,10 @@ window.onload = function init() {
             var tempMiniCards = scene.children[2].children;
             for (var i = 0; i < tempCards.length; i++) {
                 if (tempCards[i].card == card) {
-                    tempCards[i].rotation.z = Math.PI*2;
-                    tempCards[i].rotation.y = Math.PI*2;
+                    tempCards[i].rotation.z = Math.PI * 2;
+                    tempCards[i].rotation.y = Math.PI * 2;
                 }
+                tempCards[i].position.x = 0;
             }
             for (var i = 0; i < tempMiniCards.length; i++) {
                 if (tempMiniCards[i].card != miniCard) {
@@ -275,11 +299,39 @@ window.onload = function init() {
                     tempMiniCards[i].rotation.y = Math.PI * 2;
                 }
             }
-            cardsLock = false;
-            miniCardsLock = false;
+
+            function createAgain() {
+                // Delete scene (cards and mini cards)
+                for (var i = 0; i < 2; i++) {
+                    scene.remove(scene.children[1]);
+                }
+
+                // Create cards and mini cards
+                createCards(probability)
+                createMiniCards();
+
+                //Lock cards and mini cards
+                cardsLock = false;
+                miniCardsLock = false;
+                lock = false
+            }
+            setTimeout(createAgain, 1000);
         }
+        $("#btnBack").click(function () {
+            window.open("../../../../../index.html", "_self");
+        });
+        $("#btnPlay").click(function () {
+            restartGame();
+        });
+        $("#btnClear").click(function () {
+            $("#listLog").empty();
+        });
     }
+
 
     window.addEventListener('mousedown', onMouseClick, false);
 
-}
+    // }
+
+
+});
