@@ -13,6 +13,11 @@ window.onload = function () {
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(ga, s);
     })();
+    var soundIntro = new Audio("sounds/intro.wav")
+    var soundDice = new Audio("sounds/dices.wav")
+    var soundWin = new Audio("sounds/win.wav")
+    var soundLose = new Audio("sounds/lose.wav")
+
 
     var f1 = 0,
         f2 = 0,
@@ -20,12 +25,10 @@ window.onload = function () {
         f4 = 0,
         f5 = 0,
         f6 = 0;
-    var camera, scene, renderer, mesh, helper2, geometry, collision, planoInclinado, total = 0,
-        timer;
+    var camera, cameraFov = 70, cameraTop, cameraAtive = true, scene, renderer, mesh, helper2, geometry, collision, planoInclinado, total = 0, timer;
     var dinheiroTotal, bet, typeOfGambler, rest
 
-    var initScene, render2, render_stats, physics_stats, ground, spawnChair,
-        ground_material, chair_material, light;
+    var initScene, render2, render_stats, physics_stats, ground, spawnChair, ground_material, chair_material, light, spotLight;
     var chair, back, legs, animacao = true,
         premio = false,
         soma = 0,
@@ -40,8 +43,8 @@ window.onload = function () {
 
 
     var faces = [{
-            "f1": [1, 3, 4, 6]
-        },
+        "f1": [1, 3, 4, 6]
+    },
         {
             "f2": [2, 3, 6, 7]
         },
@@ -67,6 +70,22 @@ window.onload = function () {
     // setup to render scene
     function init() {
 
+
+        renderer = new THREE.WebGLRenderer({
+            antilias: true
+        });
+        renderer.setSize(window.innerWidth * 0.8, window.innerHeight * 0.8);
+
+
+
+        // configure renderer clear color
+        renderer.setClearColor("#e4e0ba");
+
+        // add the output of the renderer to the DIV with id "world"
+        document.getElementById('dice').appendChild(renderer.domElement);
+
+
+
         scene = new Physijs.Scene;
         scene.setGravity(new THREE.Vector3(0, -50, 0));
         scene.addEventListener(
@@ -77,21 +96,22 @@ window.onload = function () {
             }
         );
 
-        camera = new THREE.PerspectiveCamera(
-            35,
-            (window.innerWidth * 0.5) / (window.innerHeight * 0.5),
-            0.1,
-            1000
-        );
+        camera = new THREE.PerspectiveCamera(cameraFov, (window.innerWidth * 0.5) / (window.innerHeight * 0.5), 0.1, 1000);
 
+        camera.position.set(350, 200, 0);
+        camera.lookAt(scene.position);
+        renderer.render(scene, camera);
+
+        cameraTop = new THREE.PerspectiveCamera(20, (window.innerWidth * 0.5) / (window.innerHeight * 0.5), 0.1, 1000);
+        cameraTop.position.set(10, 470, 0);
+        cameraTop.lookAt(scene.position);
 
         // controls = new THREE.OrbitControls(camera);
         // controls.addEventListener('change', function () {
         //     renderer.render(scene, camera);
         // });
 
-        camera.position.set(350, 220, 0);
-        camera.lookAt(scene.position);
+
 
         scene.add(camera);
 
@@ -130,13 +150,12 @@ window.onload = function () {
             .8, // high friction
             .8 // low restitution
         );
-        // ground_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
-        // ground_material.map.repeat.set(3, 3);
+
 
 
         wall_material = Physijs.createMaterial(
             new THREE.MeshLambertMaterial({
-                map: THREE.ImageUtils.loadTexture('img/wall.jpg')
+                map: THREE.ImageUtils.loadTexture('img/wall3.jpg')
             }),
             .8, // high friction
             .8 // low restitution
@@ -144,8 +163,7 @@ window.onload = function () {
 
 
         wall_material.map.wrapS = wall_material.map.wrapT = THREE.RepeatWrapping;
-        wall_material.map.repeat.set(3, 3);
-
+        wall_material.map.repeat.set(10,10 );
         ground2_material = Physijs.createMaterial(
             new THREE.MeshBasicMaterial({
                 color: 0x0033
@@ -160,10 +178,12 @@ window.onload = function () {
 
         );
         wall.receiveShadow = true;
-        wall.position.y = 100
+        wall.position.y =-100
         wall.position.x = -30
+        wall.position.z = 300
         wall.rotation.y = Math.PI / 2
-
+        wall.receiveShadow = true;
+        wall.castShadow = true;
         scene.add(wall)
 
         // ground
@@ -190,6 +210,7 @@ window.onload = function () {
             0 // mass
         );;
         ground.receiveShadow = true;
+        ground.castShadow = true;
         ground.position.y = 0
         ground.position.x = -40
 
@@ -211,29 +232,36 @@ window.onload = function () {
 
 
         var axes = new THREE.AxisHelper(200);
+        scene.add(axes)
 
-
-        renderer = new THREE.WebGLRenderer({
-            antilias: true
-        });
-        renderer.setSize(window.innerWidth * 0.7, window.innerHeight * 0.7);
-
-
-        // configure renderer clear color
-        renderer.setClearColor("#e4e0ba");
-
-        // add the output of the renderer to the DIV with id "world"
-        document.getElementById('dice').appendChild(renderer.domElement);
 
 
         render();
+        soundIntro.play()
         scene.simulate();
+
 
     }
 
     function render() {
-        // console.log(animacao, dados[2].getLinearVelocity().y, dados[2].position.y)
+
         var count = 0;
+        if (cameraFov > 45) {
+            cameraFov--;
+            camera.fov = cameraFov;
+            camera.updateProjectionMatrix();
+        }
+
+        if (cameraAtive == true) {
+
+            renderer.render(scene, camera);
+
+        } else {
+            renderer.render(scene, cameraTop);
+
+
+        }
+
 
         for (var i = 0; i < dados.length; i++) {
 
@@ -258,12 +286,13 @@ window.onload = function () {
 
 
 
+
         if (animacao == true) {
             $('#play').prop('disabled', true);
-            renderer.render(scene, camera);
+            // renderer.render(scene, camera);
 
         }
-        //console.log(abertura)
+
         requestAnimationFrame(render);
 
     }
@@ -409,14 +438,16 @@ window.onload = function () {
 
     function checkPrice() {
         $("#res").text(soma)
+
         if ((soma == 5) || (soma == 6) || (soma == 7)) {
 
             if (typeOfGambler == "Pequeno") {
-                console.log("ganhaste")
-                $("#resultado").append("<div class='row' id='win'> Ganhaste </div>");
+                soundWin.play()
+                $("#resultado").append("<div class='row'  style='  margin-top: 2%' id='win'> Ganhaste </div>");
                 $("#valor").text(rest + (2 * bet));
             } else {
-                $("#resultado").append(" <div class='row' id='lose'> Perdeste </div>");
+                soundLose.play()
+                $("#resultado").append(" <div class='row' style='  margin-top: 2%' id='lose'> Perdeste </div>");
 
             }
             premio = true
@@ -426,10 +457,13 @@ window.onload = function () {
 
 
             if (typeOfGambler == "Grande") {
-                $("#resultado").append("<div class='row' id='win'> Ganhaste </div>");
+                soundWin.play()
+                $("#resultado").append("<div class='row'  style='  margin-top: 2%' id='win'> Ganhaste </div>");
                 $("#valor").text(rest + (2 * bet));
+
             } else {
-                $("#resultado").append(" <div class='row' id='lose'> Perdeste </div>");
+                soundLose.play()
+                $("#resultado").append(" <div class='row'  style='  margin-top: 2%' id='lose'> Perdeste </div>");
             }
             premio = true
 
@@ -448,6 +482,7 @@ window.onload = function () {
                 dados[i].__dirtyRotation = true;
             }
             animacao = true
+            soundDice.play()
         }
         soma = 0
 
@@ -464,13 +499,14 @@ window.onload = function () {
         bet = parseInt($("#bet").val());
         typeOfGambler = $("#typeOfGambler").val();
         rest = dinheiroTotal - bet
-        console.log(dinheiroTotal, bet, typeOfGambler)
+        // console.log(dinheiroTotal, bet, typeOfGambler)
 
 
 
         if (bet < dinheiroTotal) {
+            soundDice.play()
             $("#valor").text(rest);
-            console.log("entrei play")
+            //console.log("entrei play")
             for (var i = 0; i < dados.length; i++) {
                 dados[i].position.y = 40;
                 dados[i].__dirtyPosition = true;
@@ -500,7 +536,20 @@ window.onload = function () {
         $('#play').prop('disabled', false);
     }
 
-    $("#back").on("click", function () {});
+    $("#back").on("click", function () { });
+
+    $("#camera").on("click", function () {
+
+        if (cameraAtive == true) {
+            cameraAtive = false;
+        }
+
+        else {
+            cameraAtive = true;
+        }
+
+
+    });
 
     $("#clear").on("click", function () {
 

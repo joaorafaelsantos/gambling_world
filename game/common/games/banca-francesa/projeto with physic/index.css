@@ -15,11 +15,19 @@ body {
 }
 
 #win {
-    color: green
+    background-color: mediumseagreen;
+    text-align: center;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+
 }
 
 #lose {
-    color: red
+    background-color: darkred;
+     text-align: center;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+  
 }
 
 .range {
