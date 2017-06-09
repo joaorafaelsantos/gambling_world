@@ -54,7 +54,7 @@ $(document).ready(function () {
     });
 
     $("#homepBtn").click(function () {
-        window.open("../../../../index.html", "_self");
+        window.open("../../../index.html", "_self");
     });
 
     $("input[type=radio]").click(function () {
