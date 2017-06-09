@@ -6,14 +6,6 @@
                 <input id="user" type="text" class="form-control">
             </div>
         </div>
-        <div class="form-group">
-            <div class="radio">
-                <label><input id="male" type="radio" name="optradio">Male</label>
-            </div>
-        </div>
-        <div class="radio">
-            <label><input id="female" type="radio" name="optradio">Female</label>
-        </div>
         <div class="form-group" style="padding-top: 15px;">
             <div class="col-sm-4 col-sm-offset-4">
                 <label for="sel1">Gambling Probability:</label>
@@ -38,7 +30,58 @@
 <script>
     $(function () {
         $('#play').click(function () {
-            window.location.replace('common/games/vira/vira.html');
+            var players = [];
+
+            function restoreLocalStorage() {
+                players = [];
+                for (var i = 0; i < localStorage.length; i++) {
+                    var key = localStorage.key(i);
+                    var y = JSON.parse(localStorage.getItem(key));
+                    players.push(y);
+                }
+            }
+            if (localStorage.length != 0) {
+                restoreLocalStorage();
+            }
+            // Create object players with player info
+            var player = {};
+            if (players.length == 0) {
+                player.name = $("#user").val();
+                player.money = 100;
+                player.probability = $("#sel1 option:selected").text();
+                player.timestamp = new Date().getTime() / 1000;
+                players.push(player);
+            } else {
+                for (var i = 0; i < players.length; i++) {
+                    var tempName = $("#user").val();
+                    var tempPlayer = players[i];
+                    if (tempPlayer.name != tempName) {
+                        player.name = $("#user").val();
+                        player.money = 100;
+                        player.probability = $("#sel1 option:selected").text();
+                        player.timestamp = new Date().getTime() / 1000;
+                        players.push(player);
+                    } else {
+                        tempPlayer.probability = $("#sel1 option:selected").text();
+                        tempPlayer.timestamp = new Date().getTime() / 1000;
+                    }
+                }
+            }
+            // Save on localstorage
+            function saveLocalStorage() {
+                // Check browser support
+                if (typeof (Storage) !== "undefined") {
+                    // Store
+                    for (var i = 0; i < players.length; i++) {
+                        localStorage.setItem(i.toString(), JSON.stringify(players[i]));
+                    }
+                } else {
+                    console.log("Error", "Sorry, your browser does not support Web Storage...", "error");
+                }
+            }
+            saveLocalStorage();
+            
+            window.location.replace('assets/common/games/vira/threejs/vira.html');
         });
         $('#btnBackMenu').click(function () {
             location.reload();

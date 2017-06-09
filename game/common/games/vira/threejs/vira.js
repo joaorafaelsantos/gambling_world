@@ -1,5 +1,5 @@
 var table;
-var gameCards;
+var gameCards = [];
 var gameCardsOriginal = [];
 var gameMode;
 var raycaster = new THREE.Raycaster();
@@ -9,11 +9,51 @@ var camera;
 var renderer;
 var cards;
 var miniCards;
-var probability = '1/13'
+var name;
+var probability;
 var rWidth, rHeight;
+var money = 0;
+var sliderMaxValue = 0;
+var userBet = 1;
+
+function restoreLocalStorage() {
+    players = [];
+    for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        var y = JSON.parse(localStorage.getItem(key));
+        players.push(y);
+    }
+}
+if (localStorage.length != 0) {
+    restoreLocalStorage();
+}
 
 // window.onload = function init() {
 $(function () {
+
+    for (var i = 0; i < players.length; i++) {
+        var tempPlayer = players[i];
+        var tempDate = new Date().getTime() / 1000;
+        if (tempDate - tempPlayer.timestamp <= 10) {
+            name = tempPlayer.name;
+            money = tempPlayer.money;
+            sliderMaxValue = money;
+            probability = tempPlayer.probability;
+            $("#name").text(name);
+            $("#money").text(money + " EUR");
+        }
+    }
+
+    $("#betSlider").slider({
+        min: 1,
+        max: sliderMaxValue,
+        value: 1,
+    });
+
+    $("#betSlider").on("slide", function (slideEvt) {
+        $("#betSliderValue").text(slideEvt.value);
+    });
+
     //scene
     scene = new THREE.Scene();
 
@@ -31,22 +71,25 @@ $(function () {
     rWidth = $("#canvas-container").width();
     rHeight = window.innerHeight / (window.innerWidth / $("#canvas-container").width());
     renderer.setSize(rWidth, rHeight);
-
-    //renderer.setSize(window.innerWidth, window.innerHeight);
-
-    //controls
-    // var controls = new THREE.OrbitControls(camera, renderer.domElement);
-    // controls = new THREE.OrbitControls(camera);
-    // controls.addEventListener('change', function () {
-    //     renderer.render(scene, camera);
-    // });
+    // scene.background = new THREE.Color(0x284117);
 
     //show canvas
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
+    var firstTime = true;
+    $("#btnPlay").click(function () {
+        if (firstTime) {
+            firstTime = !firstTime;
+            $("#btnPlay").remove();
+            $("#btnBack").after(" <button id='btnPlayAgain' class='btn btn-success btn-sm' disabled>PLAY AGAIN</button>");
+            createCards(probability);
+            createMiniCards();
+            userBet = $("#betSliderValue").text();
+        }
+    });
     createTable();
-    createCards(probability);
-    createMiniCards();
+
+
 
     //render scene
     var render = function () {
@@ -228,110 +271,133 @@ $(function () {
 
     function onMouseClick(event) {
 
-        // calculate mouse position in normalized device coordinates
-        // (-1 to +1) for both components
+        if (!firstTime) {
+            // calculate mouse position in normalized device coordinates
+            // (-1 to +1) for both components
 
-        mouse.x = (event.clientX / rWidth) * 2 - 1;
-        mouse.y = -(event.clientY / rHeight) * 2 + 1;
+            mouse.x = (event.clientX / rWidth) * 2 - 1;
+            mouse.y = -(event.clientY / rHeight) * 2 + 1;
 
-        raycaster.setFromCamera(mouse, camera);
-        // calculate objects intersecting the picking ray
-        var intersects = raycaster.intersectObjects(scene.children[1].children);
-        var intersects2 = raycaster.intersectObjects(scene.children[2].children);
+            raycaster.setFromCamera(mouse, camera);
+            // calculate objects intersecting the picking ray
+            var intersects = raycaster.intersectObjects(scene.children[1].children);
+            var intersects2 = raycaster.intersectObjects(scene.children[2].children);
 
 
-        if (!cardsLock && miniCardsLock) {
-            if (intersects.length > 0 && intersects[0].object.type == "Mesh") {
-                card = intersects[0].object.card;
+            if (!cardsLock && miniCardsLock) {
+                if (intersects.length > 0 && intersects[0].object.type == "Mesh") {
+                    card = intersects[0].object.card;
+                    var tempCards = scene.children[1].children;
+                    for (var i = 0; i < tempCards.length; i++) {
+                        if (tempCards[i].card == card) {
+                            tempCards[i].rotation.z = Math.PI;
+                            tempCards[i].rotation.y = Math.PI;
+                        }
+                    }
+                    cardsLock = !cardsLock;
+                }
+            }
+            if (!miniCardsLock) {
+                if (intersects2.length > 0 && intersects2[0].object.type == "Mesh") {
+                    miniCard = intersects2[0].object.card;
+                    var tempMiniCards = scene.children[2].children;
+                    for (var i = 0; i < tempMiniCards.length; i++) {
+                        if (tempMiniCards[i].card != miniCard) {
+                            tempMiniCards[i].rotation.z = Math.PI;
+                            tempMiniCards[i].rotation.y = Math.PI;
+                        }
+                    }
+                    miniCardsLock = !miniCardsLock;
+                }
+            }
+
+            if (cardsLock && miniCardsLock && !lock) {
+                if (card == miniCard) {
+                    money = gameOdd * userBet;
+                    //save money
+                    //change money on label
+                    lock = true;
+                    var content = "<h5 class='label label-success'>CONGRATULATIONS, YOU WIN!!!</h5><br><br>"
+                    $("#listLog").append(content);
+                    $("#btnPlayAgain").prop('disabled', false);
+                    $("#btnClear").prop('disabled', false);
+                } else {
+                    money = money - userBet;
+                    //save money
+                    //change money on label
+                    lock = true;
+                    var content = "<h5 class='label label-danger'>LOSE, TRY AGAIN!</h5><br><br>"
+                    $("#listLog").append(content);
+                    $("#btnPlayAgain").prop('disabled', false);
+                    $("#btnClear").prop('disabled', false);
+                }
+            }
+
+            function restartGame() {
+                userMoney = parseFloat($("#money").text());
+                if (userMoney <= 100 && userMoney >= 1) {
+                    sliderMaxValue = userMoney;
+                } else if (userMoney > 100) {
+                    sliderMaxValue = 100;
+                } else if (userMoney < 1) {
+                    userMoney += 1;
+                }
+
+                $("#betSlider").slider({
+                    min: 1,
+                    max: sliderMaxValue,
+                    value: 1,
+                });
+
                 var tempCards = scene.children[1].children;
+                var tempMiniCards = scene.children[2].children;
                 for (var i = 0; i < tempCards.length; i++) {
                     if (tempCards[i].card == card) {
-                        tempCards[i].rotation.z = Math.PI;
-                        tempCards[i].rotation.y = Math.PI;
+                        tempCards[i].rotation.z = Math.PI * 2;
+                        tempCards[i].rotation.y = Math.PI * 2;
                     }
+                    tempCards[i].position.x = 0;
                 }
-                cardsLock = !cardsLock;
-            }
-        }
-        if (!miniCardsLock) {
-            if (intersects2.length > 0 && intersects2[0].object.type == "Mesh") {
-                miniCard = intersects2[0].object.card;
-                var tempMiniCards = scene.children[2].children;
                 for (var i = 0; i < tempMiniCards.length; i++) {
                     if (tempMiniCards[i].card != miniCard) {
-                        tempMiniCards[i].rotation.z = Math.PI;
-                        tempMiniCards[i].rotation.y = Math.PI;
+                        tempMiniCards[i].rotation.z = Math.PI * 2;
+                        tempMiniCards[i].rotation.y = Math.PI * 2;
                     }
                 }
-                miniCardsLock = !miniCardsLock;
+
+                function createAgain() {
+                    // Delete scene (cards and mini cards)
+                    for (var i = 0; i < 2; i++) {
+                        scene.remove(scene.children[1]);
+                    }
+
+                    // Create cards and mini cards
+                    createCards(probability)
+                    createMiniCards();
+
+                    //Lock cards and mini cards
+                    cardsLock = false;
+                    miniCardsLock = false;
+                    lock = false
+
+                    $("#btnPlayAgain").prop('disabled', true);
+                }
+                setTimeout(createAgain, 750);
             }
+            $("#btnBack").click(function () {
+                window.open("../../../../../index.html", "_self");
+            });
+            $("#btnPlayAgain").click(function () {
+                restartGame();
+            });
+            $("#btnClear").click(function () {
+                $("#listLog").empty();
+            });
         }
 
-        if (cardsLock && miniCardsLock && !lock) {
-            if (card == miniCard) {
-                lock = true;
-                var content = "<h5 style='color: green;'>CONGRATULATIONS, YOU WIN!!!</h5>"
-                $("#listLog").append(content);
-                $("#btnPlay").prop('disabled', false);
-                $("#btnClear").prop('disabled', false);
-            } else {
-                lock = true;
-                var content = "<h5 style='color: red;'>LOSE, TRY AGAIN!</h5>"
-                $("#listLog").append(content);
-                $("#btnPlay").prop('disabled', false);
-                $("#btnClear").prop('disabled', false);
-            }
-        }
-
-        function restartGame() {
-            var tempCards = scene.children[1].children;
-            var tempMiniCards = scene.children[2].children;
-            for (var i = 0; i < tempCards.length; i++) {
-                if (tempCards[i].card == card) {
-                    tempCards[i].rotation.z = Math.PI * 2;
-                    tempCards[i].rotation.y = Math.PI * 2;
-                }
-                tempCards[i].position.x = 0;
-            }
-            for (var i = 0; i < tempMiniCards.length; i++) {
-                if (tempMiniCards[i].card != miniCard) {
-                    tempMiniCards[i].rotation.z = Math.PI * 2;
-                    tempMiniCards[i].rotation.y = Math.PI * 2;
-                }
-            }
-
-            function createAgain() {
-                // Delete scene (cards and mini cards)
-                for (var i = 0; i < 2; i++) {
-                    scene.remove(scene.children[1]);
-                }
-
-                // Create cards and mini cards
-                createCards(probability)
-                createMiniCards();
-
-                //Lock cards and mini cards
-                cardsLock = false;
-                miniCardsLock = false;
-                lock = false
-            }
-            setTimeout(createAgain, 1000);
-        }
-        $("#btnBack").click(function () {
-            window.open("../../../../../index.html", "_self");
-        });
-        $("#btnPlay").click(function () {
-            restartGame();
-        });
-        $("#btnClear").click(function () {
-            $("#listLog").empty();
-        });
     }
 
 
     window.addEventListener('mousedown', onMouseClick, false);
-
-    // }
-
 
 });
