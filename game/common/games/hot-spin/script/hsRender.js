@@ -36,6 +36,7 @@ var money = 0;
 var bet = 0.50;
 var rWidth, rHeight;
 var players = [];
+var arrayPlayerPosition = 0;
 
 
 
@@ -64,15 +65,13 @@ $(document).ready(function () {
 
     if (localStorage.length != 0) {
         restoreLocalStorage(function () {
-
             for (var i = 0; i < players.length; i++) {
                 var tempPlayer = players[i];
+                arrayPlayerPosition = i;
                 var tempDate = new Date().getTime() / 1000;
                 if (tempDate - tempPlayer.timestamp <= 10) {
                     name = tempPlayer.name;
-					
                     money = tempPlayer.money;
-					console.log(name, money);
                     $("#playerName").html(name);
                     $("#playerMoney").html(money + "€");
                 }
@@ -210,9 +209,6 @@ $(document).ready(function () {
 
             }
         }
-
-
-        // console.log(camera.position)
         render();
 
         requestAnimationFrame(animate);

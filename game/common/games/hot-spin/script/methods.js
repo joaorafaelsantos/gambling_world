@@ -118,9 +118,7 @@ function startSlotMachine() {
             addLog("Bet: " + bet + "€<br>");
             sound_Running.currentTime = 0;
             sound_Running.play();
-        }
-        else
-        {
+        } else {
             addLog("-------------------<br>");
             addLog("<span class='lose'> Insufficient money for bet! </span><br>");
         }
@@ -349,6 +347,8 @@ function checkPrize() {
 
     $("#playerMoney").html(money + "€");
     $("input[type=radio]").prop("disabled", false);
+    players[arrayPlayerPosition].money = money;
+    saveLocalStorage();
 }
 
 function addLog(text) {
@@ -378,7 +378,18 @@ function restoreLocalStorage(callback) {
         var y = JSON.parse(localStorage.getItem(key));
         players.push(y);
     }
-	console.log(players)
-    console.log(localStorage)
     callback();
+}
+
+// Save on localstorage
+function saveLocalStorage() {
+    // Check browser support
+    if (typeof (Storage) !== "undefined") {
+        // Store
+        for (var i = 0; i < players.length; i++) {
+            localStorage.setItem(i.toString(), JSON.stringify(players[i]));
+        }
+    } else {
+        console.log("Error", "Sorry, your browser does not support Web Storage...", "error");
+    }
 }
