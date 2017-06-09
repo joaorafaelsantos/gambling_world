@@ -67,6 +67,7 @@
                     }
                 }
             }
+            console.log(players);
             // Save on localstorage
             function saveLocalStorage() {
                 // Check browser support
@@ -80,8 +81,8 @@
                 }
             }
             saveLocalStorage();
-            
-            window.location.replace('assets/common/games/vira/threejs/vira.html');
+
+            window.location.replace('common/games/vira/vira.html');
         });
         $('#btnBackMenu').click(function () {
             location.reload();

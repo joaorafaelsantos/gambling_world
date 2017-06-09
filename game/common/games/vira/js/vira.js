@@ -15,6 +15,15 @@ var rWidth, rHeight;
 var money = 0;
 var sliderMaxValue = 0;
 var userBet = 1;
+var oddForm = 0;
+var prize = 0;
+
+
+var soundWin = new Audio('sounds/win.wav');
+var soundLose = new Audio('sounds/lose.wav');
+var soundSelect = new Audio('sounds/select.wav');
+var soundCards = new Audio('sounds/cards.wav');
+
 
 function restoreLocalStorage() {
     players = [];
@@ -28,11 +37,30 @@ if (localStorage.length != 0) {
     restoreLocalStorage();
 }
 
+// Save on localstorage
+function saveLocalStorage() {
+    // Check browser support
+    if (typeof (Storage) !== "undefined") {
+        // Store
+        for (var i = 0; i < players.length; i++) {
+            localStorage.setItem(i.toString(), JSON.stringify(players[i]));
+        }
+    } else {
+        console.log("Error", "Sorry, your browser does not support Web Storage...", "error");
+    }
+}
+
 // window.onload = function init() {
 $(function () {
 
+    $("#btnBack").click(function () {
+        window.open("../../../index.html", "_self");
+    });
+
+    var arrayPlayerPosition = 0;
     for (var i = 0; i < players.length; i++) {
         var tempPlayer = players[i];
+        arrayPlayerPosition = i;
         var tempDate = new Date().getTime() / 1000;
         if (tempDate - tempPlayer.timestamp <= 10) {
             name = tempPlayer.name;
@@ -79,12 +107,13 @@ $(function () {
     var firstTime = true;
     $("#btnPlay").click(function () {
         if (firstTime) {
+            soundCards.play();
+            userBet = $("#betSliderValue").text();
             firstTime = !firstTime;
             $("#btnPlay").remove();
             $("#btnBack").after(" <button id='btnPlayAgain' class='btn btn-success btn-sm' disabled>PLAY AGAIN</button>");
             createCards(probability);
             createMiniCards();
-            userBet = $("#betSliderValue").text();
         }
     });
     createTable();
@@ -210,42 +239,35 @@ $(function () {
 
 
     function gameChooser(gameMode) {
+        var tempOdd = gameMode.split("/");
+        oddForm = ((parseFloat(tempOdd[1]) * 1.50) / 2) * (parseFloat(tempOdd[1]) - 4)
         switch (gameMode) {
             case '1/5':
                 gameCards = ['10', 'J', 'Q', 'K', 'A'];
-                gameOdd = 1.5;
                 break;
             case '1/6':
                 gameCards = ['9', '10', 'J', 'Q', 'K', 'A'];
-                gameOdd = 2;
                 break;
             case '1/7':
                 gameCards = ['8', '9', '10', 'J', 'Q', 'K', 'A'];
-                gameOdd = 2.5;
                 break;
             case '1/8':
                 gameCards = ['7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-                gameOdd = 3;
                 break;
             case '1/9':
                 gameCards = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-                gameOdd = 3.5;
                 break;
             case '1/10':
                 gameCards = ['5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-                gameOdd = 4;
                 break;
             case '1/11':
                 gameCards = ['4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-                gameOdd = 4.5;
                 break;
             case '1/12':
                 gameCards = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-                gameOdd = 5;
                 break;
             case '1/13':
                 gameCards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-                gameOdd = 5.5;
                 break;
             default:
                 break;
@@ -299,6 +321,7 @@ $(function () {
             }
             if (!miniCardsLock) {
                 if (intersects2.length > 0 && intersects2[0].object.type == "Mesh") {
+                    soundSelect.play();
                     miniCard = intersects2[0].object.card;
                     var tempMiniCards = scene.children[2].children;
                     for (var i = 0; i < tempMiniCards.length; i++) {
@@ -313,20 +336,57 @@ $(function () {
 
             if (cardsLock && miniCardsLock && !lock) {
                 if (card == miniCard) {
-                    money = gameOdd * userBet;
-                    //save money
-                    //change money on label
+                    soundWin.play();
+                    prize = oddForm * userBet;
+                    money = money + prize;
+
+                    if (money <= 100 && money >= 1) {
+                        sliderMaxValue = money;
+                    } else if (money > 100) {
+                        sliderMaxValue = money;
+                    }
+
+                    $("#betSlider").slider({
+                        min: 1,
+                        max: sliderMaxValue,
+                        value: 1,
+                    });
+
+                    players[arrayPlayerPosition].money = money;
+                    saveLocalStorage();
+
+                    $("#money").text(money + " EUR");
                     lock = true;
-                    var content = "<h5 class='label label-success'>CONGRATULATIONS, YOU WIN!!!</h5><br><br>"
+                    var content = "<h5 class='label label-success'>CONGRATULATIONS, YOU WIN " + prize + " EUR !!!</h5><br><br>"
                     $("#listLog").append(content);
                     $("#btnPlayAgain").prop('disabled', false);
                     $("#btnClear").prop('disabled', false);
                 } else {
+                    soundLose.play();
                     money = money - userBet;
-                    //save money
-                    //change money on label
+
+                    if (money <= 100 && money >= 1) {
+                        sliderMaxValue = money;
+                    } else if (money > 100) {
+                        sliderMaxValue = money;
+                    } else if (money <= 0) {
+                        money = 1;
+                        sliderMaxValue = money;
+                    }
+
+                    $("#betSlider").slider({
+                        min: 1,
+                        max: sliderMaxValue,
+                        value: 1,
+                    });
+
+                    players[arrayPlayerPosition].money = money;
+                    saveLocalStorage();
+
+
+                    $("#money").text(money + " EUR");
                     lock = true;
-                    var content = "<h5 class='label label-danger'>LOSE, TRY AGAIN!</h5><br><br>"
+                    var content = "<h5 class='label label-danger'>LOSE, TRY AGAIN !</h5><br><br>"
                     $("#listLog").append(content);
                     $("#btnPlayAgain").prop('disabled', false);
                     $("#btnClear").prop('disabled', false);
@@ -334,20 +394,9 @@ $(function () {
             }
 
             function restartGame() {
-                userMoney = parseFloat($("#money").text());
-                if (userMoney <= 100 && userMoney >= 1) {
-                    sliderMaxValue = userMoney;
-                } else if (userMoney > 100) {
-                    sliderMaxValue = 100;
-                } else if (userMoney < 1) {
-                    userMoney += 1;
-                }
+                soundCards.play();
+                userBet = $("#betSliderValue").text();
 
-                $("#betSlider").slider({
-                    min: 1,
-                    max: sliderMaxValue,
-                    value: 1,
-                });
 
                 var tempCards = scene.children[1].children;
                 var tempMiniCards = scene.children[2].children;
@@ -384,10 +433,8 @@ $(function () {
                 }
                 setTimeout(createAgain, 750);
             }
-            $("#btnBack").click(function () {
-                window.open("../../../../../index.html", "_self");
-            });
             $("#btnPlayAgain").click(function () {
+                userBet = $("#betSliderValue").text();
                 restartGame();
             });
             $("#btnClear").click(function () {

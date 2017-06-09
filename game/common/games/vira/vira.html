@@ -1,29 +1,53 @@
-<!DOCTYPE html>
-<html lang="pt">
+<html>
 
 <head>
 
-    <!-- title -->
-    <title class="notranslate">gamblingworld() / Vira</title>
-    <!-- icon -->
-    <link rel="icon" type="image/png" href="../../images/vira.ico" sizes="16x16">
-    <!-- configs -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- bootstrap css -->
-    <link href="assets/libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <!-- fontawesome -->
-    <link href="assets/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../../libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../libs/bootstrap-slider/css/bootstrap-slider.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
 </head>
 
-<body>
+<body style="background-color: rgb(20, 20, 20);">
+    <div class="container-fluid">
 
-    <!-- jquery -->
-    <script src="assets/libs/jquery/3.2.1/js/jquery-3.2.1.js"></script>
-    <!-- bootstrap js -->
-    <script src="assets/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- app js -->
-    <script src="vira.js"></script>
+        <div class="row">
+            <div id="canvas-container" class="text-center col-md-10" style="padding-top: 15px;"></div>
+            <div id="log" class="col-md-2">
+                <div id="title" style="padding-top: 20px; padding-bottom: 20px;">
+                    <h5 class="label label-warning" style="font-size: 18px;">PRIZE LOG:</h5>
+                </div>
+                <div id="listLog"></div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div id="playerPanel" class="text-center col-md-10" style="padding-top: 10px;">
+                <span id="name" class="label label-danger"></span> <span id="money" class="label label-success"></span>
+                <span id="euro"></span>
+                <span id="bet" class="label label-warning">Bet: <span id="betSliderValue">1</span> EUR</span>
+                <br><br>
+                <input disabled id="betSlider" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1"
+                    data-slider-value="1" data-slider-tooltip="hide" /><br>
+            </div>
+            <div id="buttonPanel" class="text-center col-md-10" style="padding-top: 10px;">
+                <button id="btnBack" class="btn btn-danger btn-sm">BACK</button>
+                <button id="btnPlay" class="btn btn-success btn-sm">PLAY</button>
+                <button id="btnClear" class="btn btn-warning btn-sm" disabled>CLEAR LOG</button>
+            </div>
+        </div>
+
+    </div>
+
+
+    </div>
+    <script src="../../../libs/three.js/r85/js/three.min.js"></script>
+    <script src="../../../libs/orbit-controls/OrbitControls.js"></script>
+    <script src="../../../libs/jquery/3.2.1/js/jquery-3.2.1.js"></script>
+    <script src="../../../libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../libs/bootstrap-slider/js/bootstrap-slider.js"></script>
+    <script src="js/vira.js"></script>
 </body>
+
 
 </html>
