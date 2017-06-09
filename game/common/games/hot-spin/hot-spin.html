@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HotSpin</title>
+
+    <!-- bootstrap css -->
+    <link href="../../../libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jquery -->
+    <script src="../../../libs/jquery/3.2.1/js/jquery-3.2.1.js"></script>
+    <!-- bootstrap js -->
+    <script src="../../../libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="../../../libs/three.js/r85/js/three.min.js"></script>
+    <script src="../../../libs/orbit-controls/OrbitControls.js"></script>
+    <script src="script/hsRender.js"></script>
+    <script src="script/methods.js"></script>
+
+    <link rel="stylesheet" href="CSS/main.css">
+
+
+</head>
+
+<body>
+    <div class="container-fluid no-gutter ">
+        <div class="row">
+            <div class="col-xs-9">
+
+                <div class="col-xl-12" id="canvas-container"></div>
+
+                <div class="col-xl-12" id="downTab">
+                    <div class="col-xs-3">
+                        <div class="col-xl-6">
+                            <button id="homepBtn">Back</button>
+                        </div>
+                        <div class="col-xl-6">
+                            <button id="clearBtn">Clear Log</button>
+                        </div>
+                    </div>
+                    <div class="col-xs-6" id="playerStats">
+                        <div class="col-xl-6">
+                            <p><b>Player: </b><span id="playerName">undefined</span></p>
+                        </div>
+                        <div class="col-xl-6">
+                            <p><b>Money: </b><span id="playerMoney">0€</span></p>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="col-xl-6">
+                            <button id="playBtn">PLAY</button>
+                        </div>
+                        <div class="col-xl-6" id="betDiv">
+                            <div class="col-xs-4">
+                                <p id="bet"><b>Bet:</b></p>
+                            </div>
+                            <div class="col-xs-8">
+                                <form id="radioBtn">
+                                    <input type="radio" name="money" value="0.5" checked><span class="inputVal"> 0,5€</span>
+                                    <input type="radio" name="money" value="1"><span class="inputVal"> 1€</span>
+                                    <input type="radio" name="money" value="2"><span class="inputVal"> 2€</span>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div id="logArea"></div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

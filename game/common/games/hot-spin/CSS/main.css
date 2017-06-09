@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'OpenSans-Light';
-    src: url('fonts/OpenSans-Light.ttf');
+    src: url('../../../fonts/OpenSans-Light.ttf');
 }
 
 #logArea {

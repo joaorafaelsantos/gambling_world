@@ -17,7 +17,7 @@ var currentCA = 0,
 var runningCA = false,
     runningCB = false,
     runningCC = false;
-var scene, camera, render;
+var scene, camera, render, renderer;
 var mixers = [];
 var symbols = ["BigWin", "Lemon", "Cherry", "Bar", "Banana", "7", "Watermelon"];
 var symbolA, symbolB, symbolC;
@@ -32,21 +32,59 @@ var sound_EndC = new Audio('sounds/endLine.mp3');
 var sound_BIGWIN = new Audio('sounds/BIGWIN.mp3');
 
 
-var money = 100;
+var money = 0;
 var bet = 0.50;
 var rWidth, rHeight;
+var players = [];
 
 
 
 $(document).ready(function () {
 
-    $("#playerMoney").html(money + "€");
+    $("#logArea").css("height", $(window).height());
+    $("#downTab").css("height", $(window).height() - $("#canvas-container").height());
+    $("#downTab").css("background-size", "" + $("#downTab").width() + "px 700px");
 
-    bet = $("input:checked").val();
+    $("#playBtn").click(function () {
+        startSlotMachine();
+    });
+
+    $("#clearBtn").click(function () {
+        $("#logArea").html("");
+    });
+
+    $("#homepBtn").click(function () {
+        window.open("../../../../index.html", "_self");
+    });
 
     $("input[type=radio]").click(function () {
         bet = $(this).val();
     });
+
+
+    if (localStorage.length != 0) {
+        restoreLocalStorage(function () {
+
+            for (var i = 0; i < players.length; i++) {
+                var tempPlayer = players[i];
+                var tempDate = new Date().getTime() / 1000;
+                if (tempDate - tempPlayer.timestamp <= 10) {
+                    name = tempPlayer.name;
+					
+                    money = tempPlayer.money;
+					console.log(name, money);
+                    $("#playerName").html(name);
+                    $("#playerMoney").html(money + "€");
+                }
+            }
+        });
+
+
+    }
+
+    bet = $("input:checked").val();
+
+
 
     //scene
     scene = new THREE.Scene();
@@ -80,7 +118,7 @@ $(document).ready(function () {
     scene.add(spotLight);
 
     //renderer
-    var renderer = new THREE.WebGLRenderer({
+    renderer = new THREE.WebGLRenderer({
         antialias: true
     });
     rWidth = $("#canvas-container").width();
