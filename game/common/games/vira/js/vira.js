@@ -14,7 +14,7 @@ var probability;
 var rWidth, rHeight;
 var money = 0;
 var sliderMaxValue = 0;
-var userBet = 1;
+var userBet = 1.00;
 var oddForm = 0;
 var prize = 0;
 var betted = false;
@@ -114,7 +114,7 @@ $(function () {
     $("#btnPlay").click(function () {
         if (firstTime) {
             soundCards.play();
-            userBet = $("#betSliderValue").text();
+            userBet = parseFloat($("#betSliderValue").text()).toFixed(2);
             money = money - userBet;
             $("#money").text(money + " EUR");
             firstTime = !firstTime;
@@ -248,7 +248,7 @@ $(function () {
 
     function gameChooser(gameMode) {
         var tempOdd = gameMode.split("/");
-        oddForm = ((parseFloat(tempOdd[1]) * 1.50) / 2) * (parseFloat(tempOdd[1]) - 4)
+        oddForm = (((parseFloat(tempOdd[1]) * 1.50) / 2) * (parseFloat(tempOdd[1]) - 4)).toFixed(2);
         switch (gameMode) {
             case '1/5':
                 gameCards = ['10', 'J', 'Q', 'K', 'A'];
@@ -379,7 +379,7 @@ $(function () {
                     } else if (money > 100) {
                         sliderMaxValue = money;
                     } else if (money <= 0) {
-                        money = 1;
+                        money = 1.00;
                         sliderMaxValue = money;
                     }
 
@@ -446,7 +446,7 @@ $(function () {
                 soundWin.stop();
                 soundLose.stop();
                 if (!betted) {
-                    userBet = $("#betSliderValue").text();
+                    userBet = parseFloat($("#betSliderValue").text()).toFixed(2);
                     money = money - userBet;
                     betted = true;
                 }
