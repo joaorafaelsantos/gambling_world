@@ -17,12 +17,18 @@ var sliderMaxValue = 0;
 var userBet = 1;
 var oddForm = 0;
 var prize = 0;
+var betted = false;
 
 
 var soundWin = new Audio('sounds/win.wav');
 var soundLose = new Audio('sounds/lose.wav');
 var soundSelect = new Audio('sounds/select.wav');
 var soundCards = new Audio('sounds/cards.wav');
+
+Audio.prototype.stop = function () {
+    this.pause();
+    this.currentTime = 0;
+};
 
 
 function restoreLocalStorage() {
@@ -35,7 +41,6 @@ function restoreLocalStorage() {
 }
 if (localStorage.length != 0) {
     restoreLocalStorage();
-    console.log(players);
 }
 
 // Save on localstorage
@@ -61,9 +66,9 @@ $(function () {
     var arrayPlayerPosition = 0;
     for (var i = 0; i < players.length; i++) {
         var tempPlayer = players[i];
-        arrayPlayerPosition = i;
         var tempDate = new Date().getTime() / 1000;
         if (tempDate - tempPlayer.timestamp <= 10) {
+            arrayPlayerPosition = i;
             name = tempPlayer.name;
             money = tempPlayer.money;
             sliderMaxValue = money;
@@ -110,6 +115,9 @@ $(function () {
         if (firstTime) {
             soundCards.play();
             userBet = $("#betSliderValue").text();
+            money = money - userBet;
+            console.log(money)
+            $("#money").text(money + " EUR");
             firstTime = !firstTime;
             $("#btnPlay").remove();
             $("#btnBack").after(" <button id='btnPlayAgain' class='btn btn-success btn-sm' disabled>PLAY AGAIN</button>");
@@ -362,10 +370,11 @@ $(function () {
                     $("#listLog").append(content);
                     $("#btnPlayAgain").prop('disabled', false);
                     $("#btnClear").prop('disabled', false);
+                    if (betted == true) {
+                        betted = !betted;
+                    }
                 } else {
                     soundLose.play();
-                    money = money - userBet;
-
                     if (money <= 100 && money >= 1) {
                         sliderMaxValue = money;
                     } else if (money > 100) {
@@ -391,14 +400,14 @@ $(function () {
                     $("#listLog").append(content);
                     $("#btnPlayAgain").prop('disabled', false);
                     $("#btnClear").prop('disabled', false);
+                    if (betted == true) {
+                        betted = !betted;
+                    }
                 }
             }
 
             function restartGame() {
                 soundCards.play();
-                userBet = $("#betSliderValue").text();
-
-
                 var tempCards = scene.children[1].children;
                 var tempMiniCards = scene.children[2].children;
                 for (var i = 0; i < tempCards.length; i++) {
@@ -435,7 +444,15 @@ $(function () {
                 setTimeout(createAgain, 750);
             }
             $("#btnPlayAgain").click(function () {
-                userBet = $("#betSliderValue").text();
+                soundWin.stop();
+                soundLose.stop();
+                if (!betted) {
+                    userBet = $("#betSliderValue").text();
+                    money = money - userBet;
+                    betted = true;
+                }
+
+                $("#money").text(money + " EUR");
                 restartGame();
             });
             $("#btnClear").click(function () {
