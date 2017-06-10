@@ -14,7 +14,7 @@ var probability;
 var rWidth, rHeight;
 var money = 0;
 var sliderMaxValue = 0;
-var userBet = 1.00;
+var userBet = 1;
 var oddForm = 0;
 var prize = 0;
 var betted = false;
@@ -70,7 +70,7 @@ $(function () {
         if (tempDate - tempPlayer.timestamp <= 10) {
             arrayPlayerPosition = i;
             name = tempPlayer.name;
-            money = tempPlayer.money.toFixed(2);
+            money = tempPlayer.money;
             sliderMaxValue = money;
             probability = tempPlayer.probability;
             $("#name").text(name);
@@ -85,7 +85,7 @@ $(function () {
     });
 
     $("#betSlider").on("slide", function (slideEvt) {
-        $("#betSliderValue").text(slideEvt.value.toFixed(2));
+        $("#betSliderValue").text(slideEvt.value);
     });
 
     //scene
@@ -114,8 +114,8 @@ $(function () {
     $("#btnPlay").click(function () {
         if (firstTime) {
             soundCards.play();
-            userBet = parseFloat($("#betSliderValue").text()).toFixed(2);
-            money = (money - userBet).toFixed(2);
+            userBet = parseFloat($("#betSliderValue").text());
+            money = (money - userBet);
             $("#money").text(money + " EUR");
             firstTime = !firstTime;
             $("#btnPlay").remove();
@@ -248,7 +248,7 @@ $(function () {
 
     function gameChooser(gameMode) {
         var tempOdd = gameMode.split("/");
-        oddForm = (((parseFloat(tempOdd[1]) * 1.50) / 2) * (parseFloat(tempOdd[1]) - 4)).toFixed(2);
+        oddForm = ((parseFloat(tempOdd[1]) * 1.50) / 2) * (parseFloat(tempOdd[1]) - 4);
         switch (gameMode) {
             case '1/5':
                 gameCards = ['10', 'J', 'Q', 'K', 'A'];
@@ -345,8 +345,8 @@ $(function () {
             if (cardsLock && miniCardsLock && !lock) {
                 if (card == miniCard) {
                     soundWin.play();
-                    prize = oddForm * userBet;
-                    money = (money + prize).toFixed(2);
+                    prize = oddForm.toFixed(2) * userBet;
+                    money = (money + prize);
 
                     if (money <= 100 && money >= 1) {
                         sliderMaxValue = money;
@@ -360,7 +360,7 @@ $(function () {
                         value: 1,
                     });
 
-                    players[arrayPlayerPosition].money = money.toFixed(2);
+                    players[arrayPlayerPosition].money = money;
                     saveLocalStorage();
 
                     $("#money").text(money + " EUR");
@@ -389,11 +389,11 @@ $(function () {
                         value: 1,
                     });
 
-                    players[arrayPlayerPosition].money = money.toFixed(2);
+                    players[arrayPlayerPosition].money = money;
                     saveLocalStorage();
 
 
-                    $("#money").text(money.toFixed(2) + " EUR");
+                    $("#money").text(money + " EUR");
                     lock = true;
                     var content = "<h5 class='label label-danger'>LOSE, TRY AGAIN !</h5><br><br>"
                     $("#listLog").append(content);
@@ -446,8 +446,8 @@ $(function () {
                 soundWin.stop();
                 soundLose.stop();
                 if (!betted) {
-                    userBet = parseFloat($("#betSliderValue").text()).toFixed(2);
-                    money = (money - userBet).toFixed(2);
+                    userBet = parseFloat($("#betSliderValue").text());
+                    money = (money - userBet);
                     betted = true;
                 }
 
