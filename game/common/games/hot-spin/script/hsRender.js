@@ -37,6 +37,9 @@ var bet = 0.50;
 var rWidth, rHeight;
 var players = [];
 
+var arrayPlayerPosition = 0; // JOÃO UPDATE
+var saveLocalStorage; // JOÃO UPDATE
+
 
 
 $(document).ready(function () {
@@ -62,25 +65,68 @@ $(document).ready(function () {
     });
 
 
-    if (localStorage.length != 0) {
-        restoreLocalStorage(function () {
+    // if (localStorage.length != 0) {
+    //     restoreLocalStorage(function () {
 
-            for (var i = 0; i < players.length; i++) {
-                var tempPlayer = players[i];
-                var tempDate = new Date().getTime() / 1000;
-                if (tempDate - tempPlayer.timestamp <= 10) {
-                    name = tempPlayer.name;
-					
-                    money = tempPlayer.money;
-					console.log(name, money);
-                    $("#playerName").html(name);
-                    $("#playerMoney").html(money + "€");
-                }
-            }
-        });
+    //         for (var i = 0; i < players.length; i++) {
+    //             var tempPlayer = players[i];
+    //             var tempDate = new Date().getTime() / 1000;
+    //             if (tempDate - tempPlayer.timestamp <= 10) {
+    //                 name = tempPlayer.name;
+
+    //                 money = tempPlayer.money;
+    // 				console.log(name, money);
+    //                 $("#playerName").html(name);
+    //                 $("#playerMoney").html(money + "€");
+    //             }
+    //         }
+    //     });
 
 
+    // }
+
+    // JOÃO UPDATE
+
+    function restoreLocalStorage() {
+        players = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            var y = JSON.parse(localStorage.getItem(key));
+            players.push(y);
+        }
     }
+    if (localStorage.length != 0) {
+        restoreLocalStorage();
+    }
+
+    for (var i = 0; i < players.length; i++) {
+        var tempPlayer = players[i];
+        arrayPlayerPosition = i;
+        var tempDate = new Date().getTime() / 1000;
+        if (tempDate - tempPlayer.timestamp <= 10) {
+            name = tempPlayer.name;
+            money = tempPlayer.money;
+            sliderMaxValue = money;
+            probability = tempPlayer.probability;
+            $("#playerName").html(name);
+            $("#playerMoney").html(money + "€");
+        }
+    }
+
+    // Save on localstorage
+    saveLocalStorage = function saveLocalStorage() {
+        // Check browser support
+        if (typeof (Storage) !== "undefined") {
+            // Store
+            for (var i = 0; i < players.length; i++) {
+                localStorage.setItem(i.toString(), JSON.stringify(players[i]));
+            }
+        } else {
+            console.log("Error", "Sorry, your browser does not support Web Storage...", "error");
+        }
+    }
+
+    // END OF JOÃO UPDATE
 
     bet = $("input:checked").val();
 

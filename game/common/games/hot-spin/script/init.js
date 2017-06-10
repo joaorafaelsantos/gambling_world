@@ -15,35 +15,35 @@ $(document).ready(function () {
         window.open("../../../../index.html", "_self");
     });
 
+    // JOÃO UPDATE
 
-    if (localStorage.length != 0) {
-        restoreLocalStorage(function () {
+    // if (localStorage.length != 0) {
+    //     restoreLocalStorage(function () {
 
-            for (var i = 0; i < players.length; i++) {
-                var tempPlayer = players[i];
-                var tempDate = new Date().getTime() / 1000;
-                if (tempDate - tempPlayer.timestamp <= 10) {
-                    name = tempPlayer.name;
-                    money = tempPlayer.money;
-                    $("#playerName").text(name);
-                    $("#playerMoney").text(money + "€");
-                }
-            }
-        });
-
-
-    }
-
+    //         for (var i = 0; i < players.length; i++) {
+    //             var tempPlayer = players[i];
+    //             var tempDate = new Date().getTime() / 1000;
+    //             if (tempDate - tempPlayer.timestamp <= 10) {
+    //                 name = tempPlayer.name;
+    //                 money = tempPlayer.money;
+    //                 $("#playerName").text(name);
+    //                 $("#playerMoney").text(money + "€");
+    //             }
+    //         }
+    //     });
+    // }
 
 });
-var players = [];
+// var players = [];
 
-function restoreLocalStorage(callback) {
-    players = [];
-    for (var i = 0; i < localStorage.length; i++) {
-        var key = localStorage.key(i);
-        var y = JSON.parse(localStorage.getItem(key));
-        players.push(y);
-    }
-    callback();
-}
+// function restoreLocalStorage(callback) {
+//     players = [];
+//     for (var i = 0; i < localStorage.length; i++) {
+//         var key = localStorage.key(i);
+//         var y = JSON.parse(localStorage.getItem(key));
+//         players.push(y);
+//     }
+//     callback();
+// }
+
+// END OF JOÃO UPDATE

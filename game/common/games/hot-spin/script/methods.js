@@ -118,9 +118,7 @@ function startSlotMachine() {
             addLog("Bet: " + bet + "€<br>");
             sound_Running.currentTime = 0;
             sound_Running.play();
-        }
-        else
-        {
+        } else {
             addLog("-------------------<br>");
             addLog("<span class='lose'> Insufficient money for bet! </span><br>");
         }
@@ -347,6 +345,10 @@ function checkPrize() {
         addLog("Won: <span class='win'>" + prize + "€</span><br>");
     }
 
+    // JOÃO UPDATE
+    players[arrayPlayerPosition].money = money;
+    saveLocalStorage();
+    // END OF JOÃO UPDATE
     $("#playerMoney").html(money + "€");
     $("input[type=radio]").prop("disabled", false);
 }
@@ -371,14 +373,14 @@ function simulateBIGWIN() {
     checkPrize();
 }
 
-function restoreLocalStorage(callback) {
-    players = [];
-    for (var i = 0; i < localStorage.length; i++) {
-        var key = localStorage.key(i);
-        var y = JSON.parse(localStorage.getItem(key));
-        players.push(y);
-    }
-	console.log(players)
-    console.log(localStorage)
-    callback();
-}
+// function restoreLocalStorage(callback) {
+//     players = [];
+//     for (var i = 0; i < localStorage.length; i++) {
+//         var key = localStorage.key(i);
+//         var y = JSON.parse(localStorage.getItem(key));
+//         players.push(y);
+//     }
+// 	console.log(players)
+//     console.log(localStorage)
+//     callback();
+// }
