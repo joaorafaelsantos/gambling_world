@@ -65,7 +65,7 @@ $(document).ready(function () {
         bet = $(this).val();
     });
 
-    
+
     if (localStorage.length != 0) {
         restoreLocalStorage();
     }
@@ -73,12 +73,21 @@ $(document).ready(function () {
 
     for (var i = 0; i < players.length; i++) {
         var tempPlayer = players[i];
-        
+
         var tempDate = new Date().getTime() / 1000;
         if (tempDate - tempPlayer.timestamp <= 10) {
             arrayPlayerPosition = i;
             name = tempPlayer.name;
             money = tempPlayer.money;
+            if (money < 0) {
+                money = 0;
+            }
+            if (money < 0.5) {
+                addLog("-------------------<br>");
+                addLog("<span class='lucky'>You just found 1€ in the floor, lucky you!</span><br>");
+                addLog("Won: <span class='win'>1€</span><br>");
+                money += 1;
+            }
             $("#playerName").html(name);
             $("#playerMoney").html(money + "€");
         }

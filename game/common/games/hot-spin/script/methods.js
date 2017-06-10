@@ -361,8 +361,6 @@ function checkPrize() {
         }
         addLog("Won: <span class='win'>1€</span><br>");
         money += 1;
-        
-        console.log(floorCoinCount)
     }
 
     players[arrayPlayerPosition].money = money;
