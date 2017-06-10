@@ -347,7 +347,7 @@ $(function () {
                 if (card == miniCard) {
                     soundWin.play();
                     prize = oddForm.toFixed(2) * userBet;
-                    money = (money + prize);
+                    money = (money + prize).toFixed(2);
 
                     if (money <= 100 && money >= 1) {
                         sliderMaxValue = money;
@@ -361,7 +361,7 @@ $(function () {
                         value: 1,
                     });
 
-                    players[arrayPlayerPosition].money = money;
+                    players[arrayPlayerPosition].money = money.toFixed(2);
                     saveLocalStorage();
 
                     $("#money").text(money + " EUR");
@@ -371,6 +371,8 @@ $(function () {
                     $("#btnPlayAgain").prop('disabled', false);
                     $("#btnClear").prop('disabled', false);
                     $('#betSlider').slider('enable');
+                    userBet = 1;
+                    $("#betSliderValue").text(userBet);
                     if (betted == true) {
                         betted = !betted;
                     }
@@ -381,7 +383,7 @@ $(function () {
                     } else if (money > 100) {
                         sliderMaxValue = money;
                     } else if (money <= 0) {
-                        money = 1.00;
+                        money = 1;
                         sliderMaxValue = money;
                     }
 
@@ -391,7 +393,7 @@ $(function () {
                         value: 1,
                     });
 
-                    players[arrayPlayerPosition].money = money;
+                    players[arrayPlayerPosition].money = money.toFixed(2);
                     saveLocalStorage();
 
 
@@ -402,6 +404,8 @@ $(function () {
                     $("#btnPlayAgain").prop('disabled', false);
                     $("#btnClear").prop('disabled', false);
                     $('#betSlider').slider('enable');
+                    userBet = 1;
+                    $("#betSliderValue").text(userBet);
                     if (betted == true) {
                         betted = !betted;
                     }
