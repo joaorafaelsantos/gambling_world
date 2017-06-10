@@ -345,10 +345,9 @@ function checkPrize() {
         addLog("Won: <span class='win'>" + prize + "€</span><br>");
     }
 
-    // JOÃO UPDATE
     players[arrayPlayerPosition].money = money;
     saveLocalStorage();
-    // END OF JOÃO UPDATE
+    
     $("#playerMoney").html(money + "€");
     $("input[type=radio]").prop("disabled", false);
 
@@ -374,15 +373,23 @@ function simulateBIGWIN() {
     checkPrize();
 }
 
+function restoreLocalStorage() {
+    players = [];
+    for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        var y = JSON.parse(localStorage.getItem(key));
+        players.push(y);
+    }
+}
 
-// function restoreLocalStorage(callback) {
-//     players = [];
-//     for (var i = 0; i < localStorage.length; i++) {
-//         var key = localStorage.key(i);
-//         var y = JSON.parse(localStorage.getItem(key));
-//         players.push(y);
-//     }
-// 	console.log(players)
-//     console.log(localStorage)
-//     callback();
-// }
+function saveLocalStorage() {
+    // Check browser support
+    if (typeof (Storage) !== "undefined") {
+        // Store
+        for (var i = 0; i < players.length; i++) {
+            localStorage.setItem(i.toString(), JSON.stringify(players[i]));
+        }
+    } else {
+        console.log("Error", "Sorry, your browser does not support Web Storage...", "error");
+    }
+}

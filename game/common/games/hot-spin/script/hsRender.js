@@ -37,8 +37,7 @@ var bet = 0.50;
 var rWidth, rHeight;
 var players = [];
 
-var arrayPlayerPosition = 0; // JOÃO UPDATE
-var saveLocalStorage; // JOÃO UPDATE
+var arrayPlayerPosition = 0;
 
 
 
@@ -64,59 +63,18 @@ $(document).ready(function () {
         bet = $(this).val();
     });
 
-
-    // if (localStorage.length != 0) {
-    //     restoreLocalStorage(function () {
-
-    //         for (var i = 0; i < players.length; i++) {
-    //             var tempPlayer = players[i];
-    //             var tempDate = new Date().getTime() / 1000;
-    //             if (tempDate - tempPlayer.timestamp <= 10) {
-    //                 name = tempPlayer.name;
-
-    //                 money = tempPlayer.money;
-    // 				console.log(name, money);
-    //                 $("#playerName").html(name);
-    //                 $("#playerMoney").html(money + "€");
-    //             }
-    //         }
-    //     });
-
-
-    // }
-
-    // JOÃO UPDATE
-
-    function restoreLocalStorage() {
-        players = [];
-        for (var i = 0; i < localStorage.length; i++) {
-            var key = localStorage.key(i);
-            var y = JSON.parse(localStorage.getItem(key));
-            players.push(y);
-        }
-    }
+    
     if (localStorage.length != 0) {
         restoreLocalStorage();
     }
 
-    // Save on localstorage
-    saveLocalStorage = function saveLocalStorage() {
-        // Check browser support
-        if (typeof (Storage) !== "undefined") {
-            // Store
-            for (var i = 0; i < players.length; i++) {
-                localStorage.setItem(i.toString(), JSON.stringify(players[i]));
-            }
-        } else {
-            console.log("Error", "Sorry, your browser does not support Web Storage...", "error");
-        }
-    }
 
     for (var i = 0; i < players.length; i++) {
         var tempPlayer = players[i];
-        arrayPlayerPosition = i;
+        
         var tempDate = new Date().getTime() / 1000;
         if (tempDate - tempPlayer.timestamp <= 10) {
+            arrayPlayerPosition = i;
             name = tempPlayer.name;
             money = tempPlayer.money;
             $("#playerName").html(name);
@@ -124,24 +82,15 @@ $(document).ready(function () {
         }
     }
 
-    // END OF JOÃO UPDATE
 
     bet = $("input:checked").val();
-
-
 
     //scene
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xd3d3d3);
-    // var axes = new THREE.AxisHelper(200);
-    // scene.add(axes);
 
     //camera
     camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 10, 20000);
-    // position and point the camera to the center of the scene
-
-
-
 
     var light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
     light.position.set(0, 0, -100);
@@ -176,13 +125,12 @@ $(document).ready(function () {
     //     renderer.render(scene, camera);
     // });
 
+
     //show canvas
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
 
     createMachine();
-    // createModel();
-    // createButtons();
     createLever();
     createBackground();
 
@@ -199,7 +147,6 @@ $(document).ready(function () {
         z: allCylinders.position.z
     };
     camera.position.set(0, 50, 600);
-    // camera.lookAt(cPos);
 
 
     render();
@@ -254,9 +201,6 @@ $(document).ready(function () {
 
             }
         }
-
-
-        // console.log(camera.position)
         render();
 
         requestAnimationFrame(animate);
