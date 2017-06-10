@@ -70,7 +70,7 @@ $(function () {
         if (tempDate - tempPlayer.timestamp <= 10) {
             arrayPlayerPosition = i;
             name = tempPlayer.name;
-            money = tempPlayer.money;
+            money = tempPlayer.money.toFixed(2);
             sliderMaxValue = money;
             probability = tempPlayer.probability;
             $("#name").text(name);

@@ -64,6 +64,9 @@
                 if (exists == true) {
                     players[index].probability = $("#sel1 option:selected").text();
                     players[index].timestamp = new Date().getTime() / 1000;
+                    if (players[index].money < 1) {
+                        players[index].money = 1;
+                    }
                 } else if (exists == false) {
                     player.name = $("#user").val();
                     player.money = 100;
