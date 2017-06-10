@@ -113,6 +113,7 @@ $(function () {
     var firstTime = true;
     $("#btnPlay").click(function () {
         if (firstTime) {
+            $('#betSlider').slider('disable');
             soundCards.play();
             userBet = parseFloat($("#betSliderValue").text());
             money = (money - userBet);
@@ -369,6 +370,7 @@ $(function () {
                     $("#listLog").append(content);
                     $("#btnPlayAgain").prop('disabled', false);
                     $("#btnClear").prop('disabled', false);
+                    $('#betSlider').slider('enable');
                     if (betted == true) {
                         betted = !betted;
                     }
@@ -399,6 +401,7 @@ $(function () {
                     $("#listLog").append(content);
                     $("#btnPlayAgain").prop('disabled', false);
                     $("#btnClear").prop('disabled', false);
+                    $('#betSlider').slider('enable');
                     if (betted == true) {
                         betted = !betted;
                     }
@@ -443,6 +446,7 @@ $(function () {
                 setTimeout(createAgain, 750);
             }
             $("#btnPlayAgain").click(function () {
+                $('#betSlider').slider('disable');
                 soundWin.stop();
                 soundLose.stop();
                 if (!betted) {
