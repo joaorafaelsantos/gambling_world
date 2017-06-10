@@ -31,7 +31,6 @@
             if (players.length == 0) {
                 player.name = $("#user").val();
                 player.money = 100;
-                player.probability = $("#sel1 option:selected").text();
                 player.timestamp = new Date().getTime() / 1000;
                 players.push(player);
             } else {
