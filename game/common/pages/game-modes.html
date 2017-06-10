@@ -1,33 +1,19 @@
 <div class="row">
     <div class="col-md-4">
         <a id="vira" href="#" class="btn btn-link">
-            <img class="center-block" src="common/images/games/vira.png" alt=""></a>
+            <img class="center-block btnSound" src="common/images/games/vira.png" alt=""></a>
     </div>
     <div class="col-md-4">
         <a id="hotSpin" href="#" class="btn btn-link">
-            <img class="center-block" src="common/images/games/hot-spin.png" alt=""></a>
+            <img class="center-block btnSound" src="common/images/games/hot-spin.png" alt=""></a>
     </div>
     <div class="col-md-4">
         <a id="bancaFrancesa" href="#" class="btn btn-link">
-            <img class="center-block" src="common/images/games/banca-francesa.png" alt=""></a>
+            <img class="center-block btnSound" src="common/images/games/banca-francesa.png" alt=""></a>
     </div>
 
 </div>
 <!-- Back to menu button -->
-<div class="row"><a id="btnBackMenu" class="btn btn-link" href="#"><span><i class="fa fa-angle-left fa-1x" aria-hidden="true"></i></span> Back to menu</a></div>
-<script>
-    $(function () {
-        $('#vira').click(function () {
-            $('#sectionMenu').load('common/pages/play-vira.html');
-        });
-        $('#hotSpin').click(function () {
-            $('#sectionMenu').load('common/pages/play-hot-spin.html');
-        });
-        $('#bancaFrancesa').click(function () {
-            $('#sectionMenu').load('common/pages/play-banca-francesa.html');
-        });
-        $('#btnBackMenu').click(function () {
-            location.reload();
-        });
-    });
-</script>
+<div class="row"><a id="btnBackMenu" class="btn btn-link" href="#"><span><i class="fa fa-angle-left fa-1x" aria-hidden="true"></i></span> <span class="btnSound">Back to menu</span></a></div>
+<!-- app js -->
+<script src="common/script/config.js"></script>
