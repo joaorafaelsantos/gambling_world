@@ -85,7 +85,7 @@ $(function () {
     });
 
     $("#betSlider").on("slide", function (slideEvt) {
-        $("#betSliderValue").text(slideEvt.value);
+        $("#betSliderValue").text(slideEvt.value.toFixed(2));
     });
 
     //scene
@@ -115,7 +115,7 @@ $(function () {
         if (firstTime) {
             soundCards.play();
             userBet = parseFloat($("#betSliderValue").text()).toFixed(2);
-            money = money - userBet;
+            money = (money - userBet).toFixed(2);
             $("#money").text(money + " EUR");
             firstTime = !firstTime;
             $("#btnPlay").remove();
@@ -346,7 +346,7 @@ $(function () {
                 if (card == miniCard) {
                     soundWin.play();
                     prize = oddForm * userBet;
-                    money = money + prize;
+                    money = (money + prize).toFixed(2);
 
                     if (money <= 100 && money >= 1) {
                         sliderMaxValue = money;
@@ -360,10 +360,10 @@ $(function () {
                         value: 1,
                     });
 
-                    players[arrayPlayerPosition].money = money;
+                    players[arrayPlayerPosition].money = money.toFixed(2);
                     saveLocalStorage();
 
-                    $("#money").text(money + " EUR");
+                    $("#money").text(money.toFixed(2) + " EUR");
                     lock = true;
                     var content = "<h5 class='label label-success'>CONGRATULATIONS, YOU WIN " + prize + " EUR !!!</h5><br><br>"
                     $("#listLog").append(content);
@@ -389,11 +389,11 @@ $(function () {
                         value: 1,
                     });
 
-                    players[arrayPlayerPosition].money = money;
+                    players[arrayPlayerPosition].money = money.toFixed(2);
                     saveLocalStorage();
 
 
-                    $("#money").text(money + " EUR");
+                    $("#money").text(money.toFixed(2) + " EUR");
                     lock = true;
                     var content = "<h5 class='label label-danger'>LOSE, TRY AGAIN !</h5><br><br>"
                     $("#listLog").append(content);
@@ -447,11 +447,11 @@ $(function () {
                 soundLose.stop();
                 if (!betted) {
                     userBet = parseFloat($("#betSliderValue").text()).toFixed(2);
-                    money = money - userBet;
+                    money = (money - userBet).toFixed(2);
                     betted = true;
                 }
 
-                $("#money").text(money + " EUR");
+                $("#money").text(money.toFixed(2) + " EUR");
                 restartGame();
             });
             $("#btnClear").click(function () {
