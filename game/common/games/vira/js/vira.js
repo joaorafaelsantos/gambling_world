@@ -116,7 +116,6 @@ $(function () {
             soundCards.play();
             userBet = $("#betSliderValue").text();
             money = money - userBet;
-            console.log(money)
             $("#money").text(money + " EUR");
             firstTime = !firstTime;
             $("#btnPlay").remove();
