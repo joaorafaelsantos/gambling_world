@@ -361,7 +361,7 @@ $(function () {
                         value: 1,
                     });
 
-                    players[arrayPlayerPosition].money = money.toFixed(2);
+                    players[arrayPlayerPosition].money = money;
                     saveLocalStorage();
 
                     $("#money").text(money + " EUR");
@@ -393,7 +393,7 @@ $(function () {
                         value: 1,
                     });
 
-                    players[arrayPlayerPosition].money = money.toFixed(2);
+                    players[arrayPlayerPosition].money = money;
                     saveLocalStorage();
 
 
