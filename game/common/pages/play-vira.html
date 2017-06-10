@@ -51,21 +51,29 @@
                 player.timestamp = new Date().getTime() / 1000;
                 players.push(player);
             } else {
+                var exists = false;
+                var index = 0;
                 for (var i = 0; i < players.length; i++) {
                     var tempName = $("#user").val();
                     var tempPlayer = players[i];
-                    if (tempPlayer.name != tempName) {
-                        player.name = $("#user").val();
-                        player.money = 100;
-                        player.probability = $("#sel1 option:selected").text();
-                        player.timestamp = new Date().getTime() / 1000;
-                        players.push(player);
-                    } else {
-                        tempPlayer.probability = $("#sel1 option:selected").text();
-                        tempPlayer.timestamp = new Date().getTime() / 1000;
+                    if (tempPlayer.name == tempName) {
+                        exists = true;
+                        index = i;
                     }
                 }
+
+                if (exists == true) {
+                    players[index].probability = $("#sel1 option:selected").text();
+                    players[index].timestamp = new Date().getTime() / 1000;
+                } else if (exists == false) {
+                    player.name = $("#user").val();
+                    player.money = 100;
+                    player.probability = $("#sel1 option:selected").text();
+                    player.timestamp = new Date().getTime() / 1000;
+                    players.push(player);
+                }
             }
+
             // Save on localstorage
             function saveLocalStorage() {
                 // Check browser support
