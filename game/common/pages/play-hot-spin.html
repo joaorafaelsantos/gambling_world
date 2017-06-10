@@ -17,7 +17,6 @@
             var players = [];
 
             function restoreLocalStorage() {
-                players = [];
                 for (var i = 0; i < localStorage.length; i++) {
                     var key = localStorage.key(i);
                     var y = JSON.parse(localStorage.getItem(key));
