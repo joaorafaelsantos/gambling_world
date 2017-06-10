@@ -363,7 +363,7 @@ $(function () {
                     players[arrayPlayerPosition].money = money.toFixed(2);
                     saveLocalStorage();
 
-                    $("#money").text(money.toFixed(2) + " EUR");
+                    $("#money").text(money + " EUR");
                     lock = true;
                     var content = "<h5 class='label label-success'>CONGRATULATIONS, YOU WIN " + prize + " EUR !!!</h5><br><br>"
                     $("#listLog").append(content);
@@ -451,7 +451,7 @@ $(function () {
                     betted = true;
                 }
 
-                $("#money").text(money.toFixed(2) + " EUR");
+                $("#money").text(money + " EUR");
                 restartGame();
             });
             $("#btnClear").click(function () {
