@@ -35,6 +35,7 @@ function restoreLocalStorage() {
 }
 if (localStorage.length != 0) {
     restoreLocalStorage();
+    console.log(players);
 }
 
 // Save on localstorage

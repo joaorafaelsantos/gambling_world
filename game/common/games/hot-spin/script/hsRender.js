@@ -36,7 +36,6 @@ var money = 0;
 var bet = 0.50;
 var rWidth, rHeight;
 var players = [];
-var arrayPlayerPosition = 0;
 
 var arrayPlayerPosition = 0; // JOÃO UPDATE
 var saveLocalStorage; // JOÃO UPDATE
@@ -97,22 +96,7 @@ $(document).ready(function () {
         }
     }
     if (localStorage.length != 0) {
-<<<<<<< HEAD
         restoreLocalStorage();
-    }
-
-    for (var i = 0; i < players.length; i++) {
-        var tempPlayer = players[i];
-        arrayPlayerPosition = i;
-        var tempDate = new Date().getTime() / 1000;
-        if (tempDate - tempPlayer.timestamp <= 10) {
-            name = tempPlayer.name;
-            money = tempPlayer.money;
-            sliderMaxValue = money;
-            probability = tempPlayer.probability;
-            $("#playerName").html(name);
-            $("#playerMoney").html(money + "€");
-        }
     }
 
     // Save on localstorage
@@ -122,22 +106,21 @@ $(document).ready(function () {
             // Store
             for (var i = 0; i < players.length; i++) {
                 localStorage.setItem(i.toString(), JSON.stringify(players[i]));
-=======
-        restoreLocalStorage(function () {
-            for (var i = 0; i < players.length; i++) {
-                var tempPlayer = players[i];
-                arrayPlayerPosition = i;
-                var tempDate = new Date().getTime() / 1000;
-                if (tempDate - tempPlayer.timestamp <= 10) {
-                    name = tempPlayer.name;
-                    money = tempPlayer.money;
-                    $("#playerName").html(name);
-                    $("#playerMoney").html(money + "€");
-                }
->>>>>>> origin/master
             }
         } else {
             console.log("Error", "Sorry, your browser does not support Web Storage...", "error");
+        }
+    }
+
+    for (var i = 0; i < players.length; i++) {
+        var tempPlayer = players[i];
+        arrayPlayerPosition = i;
+        var tempDate = new Date().getTime() / 1000;
+        if (tempDate - tempPlayer.timestamp <= 10) {
+            name = tempPlayer.name;
+            money = tempPlayer.money;
+            $("#playerName").html(name);
+            $("#playerMoney").html(money + "€");
         }
     }
 
@@ -271,6 +254,9 @@ $(document).ready(function () {
 
             }
         }
+
+
+        // console.log(camera.position)
         render();
 
         requestAnimationFrame(animate);
