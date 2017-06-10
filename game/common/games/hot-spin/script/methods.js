@@ -351,6 +351,8 @@ function checkPrize() {
     // END OF JOÃO UPDATE
     $("#playerMoney").html(money + "€");
     $("input[type=radio]").prop("disabled", false);
+    players[arrayPlayerPosition].money = money;
+    saveLocalStorage();
 }
 
 function addLog(text) {
@@ -373,6 +375,7 @@ function simulateBIGWIN() {
     checkPrize();
 }
 
+<<<<<<< HEAD
 // function restoreLocalStorage(callback) {
 //     players = [];
 //     for (var i = 0; i < localStorage.length; i++) {
@@ -384,3 +387,27 @@ function simulateBIGWIN() {
 //     console.log(localStorage)
 //     callback();
 // }
+=======
+function restoreLocalStorage(callback) {
+    players = [];
+    for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        var y = JSON.parse(localStorage.getItem(key));
+        players.push(y);
+    }
+    callback();
+}
+
+// Save on localstorage
+function saveLocalStorage() {
+    // Check browser support
+    if (typeof (Storage) !== "undefined") {
+        // Store
+        for (var i = 0; i < players.length; i++) {
+            localStorage.setItem(i.toString(), JSON.stringify(players[i]));
+        }
+    } else {
+        console.log("Error", "Sorry, your browser does not support Web Storage...", "error");
+    }
+}
+>>>>>>> origin/master
