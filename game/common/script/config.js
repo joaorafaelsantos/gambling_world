@@ -115,6 +115,7 @@ $(function () {
     }
 
     var players = []
+
     function restoreLocalStorage() {
         for (var i = 0; i < localStorage.length; i++) {
             var key = localStorage.key(i);
@@ -190,6 +191,7 @@ $(function () {
     });
 
     $("#playHotSpin").click(function () {
+        doSound();
         players = [];
         if (localStorage.length != 0) {
             restoreLocalStorage();
@@ -226,7 +228,11 @@ $(function () {
         // Save on localstorage
         saveLocalStorage();
 
-        window.location.replace('common/games/hot-spin/hot-spin.html');
+        function reload() {
+            window.location.replace('common/games/hot-spin/hot-spin.html');
+        }
+        setTimeout(reload, 1000);
+
     });
 
 
