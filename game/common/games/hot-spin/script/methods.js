@@ -345,9 +345,29 @@ function checkPrize() {
         addLog("Won: <span class='win'>" + prize + "€</span><br>");
     }
 
+    if (money < 0.5) {
+        floorCoinCount++;
+        if (floorCoinCount != 10 && floorCoinCount != 15) {
+            addLog("-------------------<br>");
+            addLog("<span class='lucky'>You just found 1€ in the floor, lucky you!</span><br>");
+        }
+        if (floorCoinCount == 10) {
+            addLog("-------------------<br>");
+            addLog("<span class='lucky'>Sure there are lots of coins in the floor!</span><br>");
+        }
+        if (floorCoinCount == 15) {
+            addLog("-------------------<br>");
+            addLog("<span class='lucky'>Who's loosing all this coins?</span><br>");
+        }
+        addLog("Won: <span class='win'>1€</span><br>");
+        money += 1;
+        
+        console.log(floorCoinCount)
+    }
+
     players[arrayPlayerPosition].money = money;
     saveLocalStorage();
-    
+
     $("#playerMoney").html(money + "€");
     $("input[type=radio]").prop("disabled", false);
 

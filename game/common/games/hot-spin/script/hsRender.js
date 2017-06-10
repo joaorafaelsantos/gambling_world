@@ -31,6 +31,8 @@ var sound_EndB = new Audio('sounds/endLine.mp3');
 var sound_EndC = new Audio('sounds/endLine.mp3');
 var sound_BIGWIN = new Audio('sounds/BIGWIN.mp3');
 
+var floorCoinCount = 0;
+
 
 var money = 0;
 var bet = 0.50;
