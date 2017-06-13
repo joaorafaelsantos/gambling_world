@@ -17,29 +17,49 @@ window.onload = function () {
     var soundDice = new Audio("sounds/dices.wav")
     var soundWin = new Audio("sounds/win.wav")
     var soundLose = new Audio("sounds/lose.wav")
+    var arrayPlayerPosition = 0;
+    //var players = [];
 
+    var f1 = 0, f2 = 0, f3 = 0, f4 = 0, f5 = 0, f6 = 0;
+    var camera, cameraFov = 70, cameraTop, cameraAtive = true, scene, renderer, mesh, helper2, geometry;
+    var money, bet, typeOfGambler, rest
 
-    var f1 = 0,
-        f2 = 0,
-        f3 = 0,
-        f4 = 0,
-        f5 = 0,
-        f6 = 0;
-    var camera, cameraFov = 70, cameraTop, cameraAtive = true, scene, renderer, mesh, helper2, geometry, collision, planoInclinado, total = 0, timer;
-    var dinheiroTotal, bet, typeOfGambler, rest
-
-    var initScene, render2, render_stats, physics_stats, ground, spawnChair, ground_material, chair_material, light, spotLight;
-    var chair, back, legs, animacao = true,
-        premio = false,
-        soma = 0,
-        abertura = 0;
+    var initScene, render2, ground, ground_material, chair_material, light ;
+    var animacao = true, premio = false, soma = 0, abertura = 0;
     var table, table2, table2_material, table_material, wall, wall_material, ground2, ground2_material
 
     var dados = [];
-    var valorAposta = 5
+    var playerMoneyAposta = 5
     var tipoAposta = "Pequeno";
-
     var stopped = false;
+
+    if (localStorage.length != 0) {
+        restoreLocalStorage();
+    }
+
+
+    for (var i = 0; i < players.length; i++) {
+        var tempPlayer = players[i];
+
+        var tempDate = new Date().getTime() / 1000;
+        if (tempDate - tempPlayer.timestamp <= 10) {
+            arrayPlayerPosition = i;
+            name = tempPlayer.name;
+            money = tempPlayer.money;
+            if (money < 0) {
+                money = 0;
+            }
+            if (money < 0.5) {
+                addLog("-------------------<br>");
+                addLog("<span class='lucky'>You just found 1€ in the floor, lucky you!</span><br>");
+                addLog("Won: <span class='win'>1€</span><br>");
+                money += 1;
+            }
+            $("#playerName").html(name);
+            $("#playerMoney").html(money + "€");
+        }
+    }
+
 
 
     var faces = [{
@@ -64,7 +84,7 @@ window.onload = function () {
     ]
 
     'use strict';
-    Physijs.scripts.worker = 'physijs_worker.js';
+    Physijs.scripts.worker = 'scripts/physijs_worker.js';
     Physijs.scripts.ammo = 'ammo.js';
     init()
     // setup to render scene
@@ -163,7 +183,7 @@ window.onload = function () {
 
 
         wall_material.map.wrapS = wall_material.map.wrapT = THREE.RepeatWrapping;
-        wall_material.map.repeat.set(10,10 );
+        wall_material.map.repeat.set(10, 10);
         ground2_material = Physijs.createMaterial(
             new THREE.MeshBasicMaterial({
                 color: 0x0033
@@ -178,7 +198,7 @@ window.onload = function () {
 
         );
         wall.receiveShadow = true;
-        wall.position.y =-100
+        wall.position.y = -100
         wall.position.x = -30
         wall.position.z = 300
         wall.rotation.y = Math.PI / 2
@@ -226,8 +246,6 @@ window.onload = function () {
         table2.position.x = -40
 
         scene.add(table2);
-
-
         createDices();
 
 
@@ -444,7 +462,7 @@ window.onload = function () {
             if (typeOfGambler == "Pequeno") {
                 soundWin.play()
                 $("#resultado").append("<div class='row'  style='  margin-top: 2%' id='win'> Ganhaste </div>");
-                $("#valor").text(rest + (2 * bet));
+                $("#playerMoney").text(rest + (2 * bet));
             } else {
                 soundLose.play()
                 $("#resultado").append(" <div class='row' style='  margin-top: 2%' id='lose'> Perdeste </div>");
@@ -459,7 +477,7 @@ window.onload = function () {
             if (typeOfGambler == "Grande") {
                 soundWin.play()
                 $("#resultado").append("<div class='row'  style='  margin-top: 2%' id='win'> Ganhaste </div>");
-                $("#valor").text(rest + (2 * bet));
+                $("#playerMoney").text(rest + (2 * bet));
 
             } else {
                 soundLose.play()
@@ -484,6 +502,9 @@ window.onload = function () {
             animacao = true
             soundDice.play()
         }
+        console.log(players)
+        players[arrayPlayerPosition].money = parseInt($("#playerMoney").text());
+        saveLocalStorage();
         soma = 0
 
     }
@@ -495,17 +516,17 @@ window.onload = function () {
     $("#play").on("click", function () {
 
 
-        dinheiroTotal = parseInt($("#valor").text());
+        money = parseInt($("#playerMoney").text());
         bet = parseInt($("#bet").val());
         typeOfGambler = $("#typeOfGambler").val();
-        rest = dinheiroTotal - bet
-        // console.log(dinheiroTotal, bet, typeOfGambler)
+        rest = money - bet
+        // console.log(money, bet, typeOfGambler)
 
 
 
-        if (bet < dinheiroTotal) {
+        if (bet < money) {
             soundDice.play()
-            $("#valor").text(rest);
+            $("#playerMoney").text(rest);
             //console.log("entrei play")
             for (var i = 0; i < dados.length; i++) {
                 dados[i].position.y = 40;
@@ -560,4 +581,41 @@ window.onload = function () {
 
     });
 
+
+
+    function restoreLocalStorage() {
+        players = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            var y = JSON.parse(localStorage.getItem(key));
+            players.push(y);
+        }
+    }
+
+    function saveLocalStorage() {
+        // Check browser support
+        if (typeof (Storage) !== "undefined") {
+            // Store
+            for (var i = 0; i < players.length; i++) {
+                console.log(players[i])
+                localStorage.setItem(i.toString(), JSON.stringify(players[i]));
+            }
+        } else {
+            console.log("Error", "Sorry, your browser does not support Web Storage...", "error");
+        }
+    }
+
+
+
+    $(document).on("click", "#back", function () {
+        console.log("back")
+        window.open("../../../index.html", "_self");
+
+    })
+
+
+
 }
+
+
+

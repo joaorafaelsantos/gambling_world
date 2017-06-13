@@ -238,6 +238,54 @@ $(function () {
 
 
 
+    $("#playBancaFrancesa").click(function () {
+        doSound();
+        players = [];
+        if (localStorage.length != 0) {
+            restoreLocalStorage();
+        }
+        // Create object players with player info
+        var player = {};
+        if (players.length == 0) {
+            player.name = $("#user").val();
+            player.money = 100;
+            player.timestamp = new Date().getTime() / 1000;
+            players.push(player);
+        } else {
+            var exists = false;
+            var index = 0;
+            for (var i = 0; i < players.length; i++) {
+                var tempName = $("#user").val();
+                var tempPlayer = players[i];
+                if (tempPlayer.name == tempName) {
+                    exists = true;
+                    index = i;
+                }
+            }
+
+            if (exists == true) {
+                players[index].timestamp = new Date().getTime() / 1000;
+            } else if (exists == false) {
+                player.name = $("#user").val();
+                player.money = 100;
+                player.timestamp = new Date().getTime() / 1000;
+                players.push(player);
+            }
+
+        }
+        // Save on localstorage
+        saveLocalStorage();
+
+        function reload() {
+            window.location.replace('common/games/banca-francesa/banca-francesa.html');
+        }
+        setTimeout(reload, 1000);
+
+    });
+
+
+
+
 
 
 
