@@ -319,12 +319,25 @@ $(function () {
                 if (intersects.length > 0 && intersects[0].object.type == "Mesh") {
                     card = intersects[0].object.card;
                     var tempCards = scene.children[1].children;
+                    var tempArray = [];
                     for (var i = 0; i < tempCards.length; i++) {
                         if (tempCards[i].card == card) {
                             tempCards[i].rotation.z = Math.PI;
                             tempCards[i].rotation.y = Math.PI;
+                        } else {
+                            tempArray.push(tempCards[i]);
                         }
                     }
+
+                    function rotateCards() {
+                        for (var i = 0; i < tempArray.length; i++) {
+                            var element = tempArray[i];
+                            element.rotation.z = Math.PI;
+                            element.rotation.y = Math.PI;
+                        }
+
+                    }
+                    setTimeout(rotateCards, 1000);
                     cardsLock = !cardsLock;
                 }
             }
@@ -418,6 +431,10 @@ $(function () {
                 var tempMiniCards = scene.children[2].children;
                 for (var i = 0; i < tempCards.length; i++) {
                     if (tempCards[i].card == card) {
+                        tempCards[i].rotation.z = Math.PI * 2;
+                        tempCards[i].rotation.y = Math.PI * 2;
+                    }
+                    else {
                         tempCards[i].rotation.z = Math.PI * 2;
                         tempCards[i].rotation.y = Math.PI * 2;
                     }
