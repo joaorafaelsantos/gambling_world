@@ -248,12 +248,6 @@ window.onload = function () {
         scene.add(table2);
         createDices();
 
-
-        var axes = new THREE.AxisHelper(200);
-        scene.add(axes)
-
-
-
         render();
         soundIntro.play()
         scene.simulate();
