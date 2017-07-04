@@ -20,22 +20,12 @@ window.onload = function () {
     var arrayPlayerPosition = 0;
     //var players = [];
 
-    var f1 = 0,
-        f2 = 0,
-        f3 = 0,
-        f4 = 0,
-        f5 = 0,
-        f6 = 0;
-    var camera, cameraFov = 70,
-        cameraTop, cameraAtive = true,
-        scene, renderer, mesh, helper2, geometry;
+    var f1 = 0, f2 = 0, f3 = 0, f4 = 0, f5 = 0, f6 = 0;
+    var camera, cameraFov = 70, cameraTop, cameraAtive = true, scene, renderer, mesh, helper2, geometry;
     var money, bet, typeOfGambler, rest
 
-    var initScene, render2, ground, ground_material, chair_material, light;
-    var animacao = true,
-        premio = false,
-        soma = 0,
-        abertura = 0;
+    var initScene, render2, ground, ground_material, chair_material, light ;
+    var animacao = true, premio = false, soma = 0, abertura = 0;
     var table, table2, table2_material, table_material, wall, wall_material, ground2, ground2_material
 
     var dados = [];
@@ -73,8 +63,8 @@ window.onload = function () {
 
 
     var faces = [{
-            "f1": [1, 3, 4, 6]
-        },
+        "f1": [1, 3, 4, 6]
+    },
         {
             "f2": [2, 3, 6, 7]
         },
@@ -536,9 +526,6 @@ window.onload = function () {
                 dados[i].position.y = 40;
                 dados[i].__dirtyPosition = true;
 
-                cube.position.x = -20 + i * 20
-
-
                 dados[i].rotation.set(
                     Math.random() * Math.PI * 2,
                     Math.random() * Math.PI * 2,
@@ -564,13 +551,15 @@ window.onload = function () {
         $('#play').prop('disabled', false);
     }
 
-    $("#back").on("click", function () {});
+    $("#back").on("click", function () { });
 
     $("#camera").on("click", function () {
 
         if (cameraAtive == true) {
             cameraAtive = false;
-        } else {
+        }
+
+        else {
             cameraAtive = true;
         }
 
@@ -621,3 +610,6 @@ window.onload = function () {
 
 
 }
+
+
+
